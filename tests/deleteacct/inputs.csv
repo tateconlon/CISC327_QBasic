@@ -1,0 +1,6 @@
+login,agent,deleteacct,1234567,test,logout
+login ,machine,deleteacct,1234567,Test,logout
+login,agent,deleteacct,1234567,a,logout
+login,agent,deleteacct,1234567,Test123456789012345678901234567,logout
+login,agent,createacct,1234567,test,deleteacct,1234567,test,logout
+login,agent,deleteacct,1234567,test,logout

@@ -1,0 +1,4 @@
+login,machine,logout
+login,agent,logout
+login,machine,logout,withdraw
+login,machine,logout,login,agent,logout,login,machine,logout

@@ -1,0 +1,6 @@
+login,machine,deposit,1234567,50000,logout
+login,agent,deposit,1234567,50000,logout
+login,machine,deposit,1000007,50000,logout
+login,machine,deposit,1234567,eleventeen,logout
+login,machine,deposit,1234567,5000000,logout
+login,agent,deposit,1234567,999999999,logout

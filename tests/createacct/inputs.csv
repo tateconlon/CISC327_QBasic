@@ -1,0 +1,11 @@
+login,agent,createacct,1234567,TestAccount,logout
+login,machine,createacct,2234567,TestAccount2,logout
+login,agent,createacct,1234567,TestAccount2,logout
+login,agent,createacct,123456,TestAccount2,logout
+login,agent,createacct,12345678,TestAccount2,logout
+login,agent,createacct,0123456,TestAccount2,logout
+login,agent,createacct,2234567,TestAccount,logout
+login,agent,createacct,2234567,TestAccount123456789123456789123456789,logout
+login,agent,createacct,2234567,Te,logout
+login,agent,createacct,2234567, TestAccount2,logout
+login,agent,createacct,2234567,TestAccount2 ,logout
