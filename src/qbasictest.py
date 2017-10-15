@@ -1,4 +1,4 @@
-class Test:
+class QBasicTest:
 	"""A class which represents a single test, each with it's set of inputs,
 	expected outputs and various other properties
 	"""
