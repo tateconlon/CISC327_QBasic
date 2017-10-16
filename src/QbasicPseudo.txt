@@ -12,12 +12,30 @@ then loop for command
 	command functions write to transcript file variable that is a list of lines
 on 'logout'
 write transaction file
+
+
+
+
 write output file?
-write valid accounts file?
+
+write valid accounts file? <- no, this is passed in, not written out
 
 
 How to hand output to terminal and also to output file? Can you do that?
-How to validate transfers? Look into back end
-
+How to validate transfers? Look into back end -> I think we messed up, cannot validate on front end
+How to error out.
 
 failsafe: exit calls logout so everything gets printed
+
+
+
+
+QBasic as a class:
+
+
+
+
+
+
+
+
