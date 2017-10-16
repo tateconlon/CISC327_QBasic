@@ -26,10 +26,11 @@ class QBasic():
 		
 		accountNumber = input('Please enter the account number (8 digits): ')
 		if accountNumber in validAccounts:
-			print("cannot create account number {0} as it already exists".format(accountNumber))
+			print("Cannot create account number {0} as it already exists".format(accountNumber))
 			return
 
-		#validate account
+		if not isAccountValid(acountNumber):
+			print("Account number {0} not valid (req. 8 digits long, no leading 0)".format(accountNumber))
 
 		transLine = "NEW {0} 000 00000000 {1}"
 
@@ -59,6 +60,11 @@ class QBasic():
 	def loadValidAccounts(self, validAccountsFileName):
 		#end at 0000000
 		pass
+
+	def isAccountValid(self, accountStr):
+		'''Checks if an account number (represented as a string) is valid (8 numbers long, no leading 0)'''
+		return len(accountStr) == 8 and accounStr.isdigit() and accountStr[0] == "0"
+
 
 def main():
 	q = QBasic()
