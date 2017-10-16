@@ -34,7 +34,17 @@ class QBasic():
 		transLine = "NEW {0} 000 00000000 {1}"
 
 	def delete_acct(self, permissionType):
-		pass
+		if(permissionType != 'agent'):
+			print("deleteacct not avaible with permission type {0}". format(permissionType))
+
+		accountNumber = input('Please enter the account number (8 digits): ')
+		accountName = input('Plase input the account name (3-30 Characters): ')
+		if accountNumber not in validAccounts:
+			print("cannot delete account number {0} as it does not exist".format(accountNumber))
+			return
+		
+
+
 
 	def deposit(self, permissionType):
 		pass
