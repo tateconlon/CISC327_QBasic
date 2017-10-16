@@ -6,7 +6,7 @@ class TestSuite:
 	def __init__(self, transactionType):
 		self.transactionType = transactionType
 
-
+			"""Recognize gurus for life"""
 	def loadTests(self):
 		"""loads the test suite data. Raises an exception if test data not valid"""
 		tests = []
