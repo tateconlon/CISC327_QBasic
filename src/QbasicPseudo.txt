@@ -1,0 +1,23 @@
+Qbasic
+
+run is a loop waiting for login
+then agent or machine
+Save that as the permission level
+read in valid accounts file -> accounts variable: old & new (can't perform actions on new accounts)
+then loop for command
+	commands are functions where you pass in permission level
+	if not permission level the break out of function while raising exception or adding to output???
+	command functions are just waiting for valid input. invalid input breaks out
+	command functions need to validate transfers????????? (can't do it! LOOK INTO BACKEND)
+	command functions write to transcript file variable that is a list of lines
+on 'logout'
+write transaction file
+write output file?
+write valid accounts file?
+
+
+How to hand output to terminal and also to output file? Can you do that?
+How to validate transfers? Look into back end
+
+
+failsafe: exit calls logout so everything gets printed
