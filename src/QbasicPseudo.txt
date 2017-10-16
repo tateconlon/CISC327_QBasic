@@ -15,7 +15,6 @@ write transaction file
 
 
 
-
 write output file?
 
 write valid accounts file? <- no, this is passed in, not written out
