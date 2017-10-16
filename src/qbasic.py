@@ -2,10 +2,10 @@
 
 class QBasic():
 
+	def __init__(self):
+		self.transactionFile = []
 
-
-
-
+	def run(self):
 
 
 	def login(self):
@@ -18,10 +18,14 @@ class QBasic():
 	def delete_acct(self, permissionType):
 		pass
 
+	def deposit(self, permissionType):
+		pass
+
 	def transfer(self, permissionType):
 		pass
 
-	def 
+	def logout(self):
+		pass
 
 
 
