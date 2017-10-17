@@ -90,7 +90,7 @@ class QBasic():
 			return
 		
 		accountNumber = input('Please enter the account number (7 digits): ')
-		if accountNumber not in validAccounts:
+		if accountNumber not in self.validAccounts:
 			print("Cannot delete account number {0} as it does not exist".format(accountNumber))
 			return
 		accountName = input('Plase input the account name: ')
@@ -215,7 +215,9 @@ class QBasic():
 
 
 def main():
-	q = QBasic("validAccounts.txt", "transactionSummary.txt")
+	args = sys.argv
+	args.remove(__file__)
+	q = QBasic(args[0], args[1])
 	q.run()
 
 if __name__ == "__main__":
