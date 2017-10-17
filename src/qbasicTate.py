@@ -37,7 +37,7 @@ class QBasic():
 			print("login permission {0} invalid. Please choose agent or machine.".format(permissionType))
 			return ""
 		
-		loadValidAccounts(validAccountsFileName)
+		self.loadValidAccounts(validAccountsFileName)
 
 		print("login as {0} successful.".format(permissionType))
 		return permissionType
@@ -112,7 +112,10 @@ class QBasic():
 		pass
 
 	def loadValidAccounts(self, validAccountsFileName):
-		#end at 0000000
+		'''loads self.validAccounts from valid accounts file. Assumes Valid Accounts file is formatted perfectly'''
+		with open(validAccountsFileName, "r") as f:
+			lines = [x.strip() for x in f.readlines()]
+		self.validAccounts = lines[:-1] #0000000 is the last line
 		pass
 
 	def isNameValid(self, nameStr):
@@ -130,7 +133,11 @@ class QBasic():
 
 def main():
 	q = QBasic()
+	q.login("validAccounts.txt")
+	print(q.validAccounts)
 	q.loggedInState('agent')
 
 if __name__ == "__main__":
 	main()
+
+#region-tracking
