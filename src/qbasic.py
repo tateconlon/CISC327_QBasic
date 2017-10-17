@@ -1,4 +1,5 @@
 import sys
+
 class QBasic():
 
 	def __init__(self, validAccountsFilename, transactionSummaryFileName):
@@ -6,6 +7,9 @@ class QBasic():
 		self.validAccounts = []	#list of strings
 		self.validAccountsFileName = validAccountsFilename
 		self.transactionSummaryFileName = transactionSummaryFileName
+
+	def __del__(self):
+		self.logout()
 
 	def run(self):
 		print('Welcome to QBasic!')
@@ -35,8 +39,7 @@ class QBasic():
 			elif transactionInput == "transfer":
 				self.transfer(permissionType)
 			elif transactionInput == "logout":
-				self.logout()
-				loggedOut = True
+				loggedOut = self.logout()
 			elif transactionInput == "createacct":
 				self.create_acct(permissionType)
 			elif transactionInput == "deleteacct":
@@ -53,7 +56,11 @@ class QBasic():
 			print("login permission {0} invalid. Please choose agent or machine.".format(permissionType))
 			return ""
 		
-		self.loadValidAccounts()
+		try:
+			self.loadValidAccounts()
+		except Exception as e:
+			print("login unsuccessful due to {0}".format(e))
+			return ""
 
 		print("login as {0} successful.".format(permissionType))
 		return permissionType
@@ -189,12 +196,14 @@ class QBasic():
 		pass
 
 	def logout(self):
-		'''Writes the transaction summary file'''
-		self.transactionFile.append("EOS")
-		with open(self.transactionSummaryFileName, "w") as f:
-			f.write('\n'.join(self.transactionFile))
-		
-		self.transactionFile = [] #clear transactionFile
+		'''returns True if logout successful'''
+		try:
+			self.writeTransactionSummary()
+		except Exception as e:
+			print("logout unsuccessful due to: {0}".format(e))
+			return False
+		print("Transaction File written and system logged successfully.")
+		return True
 
 	def loadValidAccounts(self):
 		'''loads self.validAccounts from valid accounts file. Assumes Valid Accounts file is formatted perfectly'''
@@ -212,6 +221,16 @@ class QBasic():
 	def isAccountValid(self, accountStr):
 		'''Checks if an account number (represented as a string) is valid (7 numbers long, no leading 0)'''
 		return len(accountStr) == 7 and accountStr.isdigit() and accountStr[0] != "0"
+
+	def writeTransactionSummary(self):
+		'''Writes the transaction summary file and clears self.transactionFile list'''
+		self.transactionFile.append("EOS")
+		with open(self.transactionSummaryFileName, "w") as f:
+			f.write('\n'.join(self.transactionFile))
+		
+		self.transactionFile = [] #clear transactionFile
+
+	
 
 
 def main():
