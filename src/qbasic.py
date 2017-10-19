@@ -271,6 +271,7 @@ class QBasic():
 		self.transactionFile = [] #clear transactionFile
 
 	
+	
 
 
 def main():
