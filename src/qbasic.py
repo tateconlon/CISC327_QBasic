@@ -13,21 +13,21 @@ class QBasic():
 
 	def run(self):
 		print('Welcome to QBasic!')
-		while True:
-			#log in
-			while(input('Please type login to log in: ') != "login"):
-				pass
-			permissionType = self.login()
-			
-			if(permissionType == ""):	#log in unsuccessful
-				continue #go back to top of while True
-			
-			#log in successful
-			self.loggedInState(permissionType)
+		
+		#log in
+		while(input('Please type login to log in: ') != "login"):
+			pass
+		permissionType = self.login()
+		
+		if(permissionType == ""):	#log in unsuccessful
+			continue #go back to top of while True
+		
+		#log in successful
+		self.startLoggedInState(permissionType)
 
-			#logout
+		#logout
 
-	def loggedInState(self, permissionType):
+	def startLoggedInState(self, permissionType):
 		'''A loop that represents the logged in state. A return from this means they've logged out'''
 		loggedOut = False
 		while (not loggedOut):
