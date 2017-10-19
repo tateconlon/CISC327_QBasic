@@ -113,6 +113,44 @@ class QBasic():
 		print("Deletion of account {0} {1} successful".format(accountNumber, accountName))
 		return
 
+	def withdraw(self, permissionType):
+		'''Withdraw money that has been created by the backend.
+		1) Asks for valid account number.
+		2) Asks for amount to withdraw in cents.
+		3) Wdr Amt must be less than $1000.00 for machine, less than $999,999.99 for agent
+		4) Writes to transaction file
+		'''
+
+		if permissionType not in ['agent', 'machine']:
+			print('Cannot access deposit with permission type {0}'.format(permissionType))
+			return 
+
+		accountNumber = input('Please enter the account number to withdraw from: ')
+		if(accountNumber not in self.validAccounts):
+			print('Account {0} does not exist'.format(accountNumber))
+			return
+
+		wdrAmtStr = input('Please enter the amount to deposit (in cents): ')
+		try:
+			wdrAmt = int(wdrAmtStr)
+		except ValueError:
+			print('{0} is not a valid number'.format(wdrAmtStr))
+			return
+
+		if(permissionType == 'agent' and wdrAmt > 99999999):
+			print('Cannot withdraw more than $999,999.99 in a single transaction in agent mode')
+			return
+
+		if(permissionType == 'machine' and wdrAmt > 100000):
+			print('Cannot withdraw more than $1000.00 in a single transaction in machine mode')
+			return
+
+		newTransLine = "WDR {0} {1} 00000000 ***".format(accountNumber, wdrAmtStr)
+		self.transactionFile.append(newTransLine)
+
+		print('withdraw {0} {1} successful.'.format(accountNumber, wdrAmtStr))
+		return	
+
 	def deposit(self, permissionType):
 		'''Deposit money into an account that has been created by the backend.
 		1) Asks for valid account number.
@@ -149,6 +187,7 @@ class QBasic():
 
 		print('deposit {0} {1} successful.'.format(accountNumber, depAmtStr))
 		return	
+
 
 	def transfer(self, permissionType):
 		'''Transfer money from an account to another. Both accounts must be created by the backend.
@@ -230,6 +269,8 @@ class QBasic():
 			f.write('\n'.join(self.transactionFile))
 		
 		self.transactionFile = [] #clear transactionFile
+
+	
 
 
 def main():
