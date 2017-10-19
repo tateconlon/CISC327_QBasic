@@ -68,6 +68,7 @@ class QBasic():
 	def create_acct(self, permissionType):
 		if(permissionType != 'agent'):
 			print("createacct not available with permission type {0}".format(permissionType))
+			return
 		
 		accountNumber = input('Please enter the account number (7 digits): ')
 		if accountNumber in self.validAccounts:
@@ -229,8 +230,6 @@ class QBasic():
 			f.write('\n'.join(self.transactionFile))
 		
 		self.transactionFile = [] #clear transactionFile
-
-	
 
 
 def main():
