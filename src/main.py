@@ -5,6 +5,7 @@ import csv
 
 def readTestInputCsv(transactionName):
 	'''
+
 	Reads the inputs for a transactions test suite and returns
 	a list of tests, each which contains a list of input for that test
 	'''
