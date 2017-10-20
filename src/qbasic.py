@@ -1,16 +1,30 @@
 import sys
+import argparse
 
 class QBasic():
+	'''
+	This class represents the QBasic front end. QBasic is a simple banking interface
+	that reads in a valid accounts file full of valid account numbers and after the session
+	outputs a transaction summary file that represents the transactions that occured during that session.
+	Valid account and Transaction Summary files (path relative to script) must be given in order to create a QBasic object.
 
+	To begin a QBasic session, use the .run method
+	'''
 	def __init__(self, validAccountsFilename, transactionSummaryFileName):
-		self.transactionFile = [] #list of strings
-		self.validAccounts = []	#list of strings
+		'''
+		validAccountsFileName and transactionSummaryFileName are both path relative to this script.
+		'''
+		self.transactionFile = [] #list of strings. Added onto throughout execution, gets written to transaction summary file
+		self.validAccounts = []	#list of strings representing accounts read from valid accounts file
 		self.validAccountsFileName = validAccountsFilename
 		self.transactionSummaryFileName = transactionSummaryFileName
 		self.loggedIn = False
-		self.isRunning = False
+		self.isRunning = False	#Used to check if the transaction session is already running (preventing calling .run while it is running)
 
 	def __del__(self):
+		'''
+		Deconstructor logs out. This means that upon unexpected abort, transaction summary file still gets written
+		'''
 		if self.loggedIn:
 			self.logout()
 		self.isRunning = False
@@ -37,6 +51,7 @@ class QBasic():
 		#log in successful
 		self.startLoggedInState(permissionType)
 
+		#return from logged in state means logout has occurred, and the session is over
 		self.isRunning = False
 
 
@@ -50,14 +65,14 @@ class QBasic():
 
 		while (self.loggedIn):
 			transactionInput = input("Input the transaction code: ")
-			if transactionInput == "deposit":
+			if transactionInput == "logout":
+				self.logout()
+			elif transactionInput == "deposit":
 				self.deposit(permissionType)
 			elif transactionInput == "withdraw":
 				self.withdraw(permissionType)
 			elif transactionInput == "transfer":
 				self.transfer(permissionType)
-			elif transactionInput == "logout":
-				self.logout()
 			elif transactionInput == "createacct":
 				self.create_acct(permissionType)
 			elif transactionInput == "deleteacct":
@@ -80,7 +95,7 @@ class QBasic():
 			print("login unsuccessful due to {0}".format(e))
 			return ""
 
-		self.loggedIn =True
+		self.loggedIn = True
 		print("login as {0} successful.".format(permissionType))
 		return permissionType
 
@@ -148,7 +163,6 @@ class QBasic():
 		3) Wdr Amt must be less than $1000.00 for machine, less than $999,999.99 for agent
 		4) Writes to transaction file
 		'''
-
 		if permissionType not in ['agent', 'machine']:
 			print('Cannot access deposit with permission type {0}'.format(permissionType))
 			return 
@@ -307,9 +321,20 @@ class QBasic():
 
 
 def main():
-	args = sys.argv
-	args.remove(__file__)
-	q = QBasic(args[0], args[1])
+	'''runs when script run from command-line'''
+
+	#parse command-line arguments
+	arg_parser = argparse.ArgumentParser()
+	arg_parser.add_argument("validAccountFileName",
+							help="valid account filename",
+							type=str)
+	arg_parser.add_argument("transactionSummaryFileName",
+							help="transaction summary filename",
+							type=str)
+
+	args = vars(arg_parser.parse_args()) #returns dict {"name": val}
+
+	q = QBasic(args['validAccountFileName'], args['transactionSummaryFileName'])
 	q.run()
 
 if __name__ == "__main__":
