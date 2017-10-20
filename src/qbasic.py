@@ -344,8 +344,10 @@ def main():
 
 	args = vars(arg_parser.parse_args()) #returns dict {"name": val}
 
+	#create and run qbasic session
 	q = QBasic(args['validAccountFileName'], args['transactionSummaryFileName'])
 	q.run()
 
+#if run as script, run main()
 if __name__ == "__main__":
 	main()
