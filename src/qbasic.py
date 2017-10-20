@@ -19,7 +19,6 @@ class QBasic():
 		self.validAccountsFileName = validAccountsFilename
 		self.transactionSummaryFileName = transactionSummaryFileName
 		self.loggedIn = False
-		self.isRunning = False	#Used to check if the transaction session is already running (preventing calling .run while it is running)
 
 	def __del__(self):
 		'''
@@ -27,15 +26,9 @@ class QBasic():
 		'''
 		if self.loggedIn:
 			self.logout()
-		self.isRunning = False
 
 	def run(self):
 		'''Starts a QBasic session'''
-		if self.isRunning:
-			print("Cannot run a QBasic session while it is is running")
-			return
-
-		self.isRunning = True
 		self.loggedIn = False
 		print('Welcome to QBasic!')
 		
@@ -52,7 +45,6 @@ class QBasic():
 		self.startLoggedInState(permissionType)
 
 		#return from logged in state means logout has occurred, and the session is over
-		self.isRunning = False
 
 
 	def startLoggedInState(self, permissionType):
