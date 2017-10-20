@@ -7,30 +7,38 @@ class QBasic():
 		self.validAccounts = []	#list of strings
 		self.validAccountsFileName = validAccountsFilename
 		self.transactionSummaryFileName = transactionSummaryFileName
+		self.loggedIn = False
 
 	def __del__(self):
-		self.logout()
+		if self.loggedIn:
+			self.logout()
 
 	def run(self):
+		self.loggedIn = False
 		print('Welcome to QBasic!')
 		
 		#log in
-		while(input('Please type login to log in: ') != "login"):
-			pass
-		permissionType = self.login()
-		
-		if(permissionType == ""):	#log in unsuccessful
-			continue #go back to top of while True
-		
+		while not self.loggedIn:
+			while(input('Please type login to log in: ') != "login"):
+				pass
+			permissionType = self.login()
+			
+			if not self.loggedIn:	#log in unsuccessful
+				continue #go back to top of while True
+
 		#log in successful
 		self.startLoggedInState(permissionType)
 
-		#logout
 
 	def startLoggedInState(self, permissionType):
-		'''A loop that represents the logged in state. A return from this means they've logged out'''
-		loggedOut = False
-		while (not loggedOut):
+		'''A loop that represents the logged in state. A return from this means they've logged out.
+		Sets logged in to true.
+		'''
+		if not self.loggedIn:
+			print("You are not logged in, you cannot enter the logged in state!")
+			return
+
+		while (self.loggedIn):
 			transactionInput = input("Input the transaction code: ")
 			if transactionInput == "deposit":
 				self.deposit(permissionType)
@@ -39,7 +47,7 @@ class QBasic():
 			elif transactionInput == "transfer":
 				self.transfer(permissionType)
 			elif transactionInput == "logout":
-				loggedOut = self.logout()
+				self.logout()
 			elif transactionInput == "createacct":
 				self.create_acct(permissionType)
 			elif transactionInput == "deleteacct":
@@ -63,7 +71,8 @@ class QBasic():
 			return ""
 
 		print("login as {0} successful.".format(permissionType))
-		return permissionType
+
+		self.startLoggedInState(permissionType)
 
 	def create_acct(self, permissionType):
 		if(permissionType != 'agent'):
@@ -237,13 +246,18 @@ class QBasic():
 
 	def logout(self):
 		'''returns True if logout successful'''
+		if(self.loggedIn == False):
+			print('Cannot logout if already logged out.')
+			return
+
 		try:
 			self.writeTransactionSummary()
 		except Exception as e:
 			print("logout unsuccessful due to: {0}".format(e))
-			return False
+			return
+
 		print("Transaction File written and system logged successfully.")
-		return True
+		self.loggedIn = False
 
 	def loadValidAccounts(self):
 		'''loads self.validAccounts from valid accounts file. Assumes Valid Accounts file is formatted perfectly'''
