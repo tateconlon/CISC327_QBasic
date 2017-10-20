@@ -8,12 +8,20 @@ class QBasic():
 		self.validAccountsFileName = validAccountsFilename
 		self.transactionSummaryFileName = transactionSummaryFileName
 		self.loggedIn = False
+		self.isRunning = False
 
 	def __del__(self):
 		if self.loggedIn:
 			self.logout()
+		self.isRunning = False
 
 	def run(self):
+		'''Starts a QBasic session'''
+		if self.isRunning:
+			print("Cannot run a QBasic session while it is is running")
+			return
+
+		self.isRunning = True
 		self.loggedIn = False
 		print('Welcome to QBasic!')
 		
@@ -28,6 +36,8 @@ class QBasic():
 
 		#log in successful
 		self.startLoggedInState(permissionType)
+
+		self.isRunning = False
 
 
 	def startLoggedInState(self, permissionType):
@@ -70,11 +80,16 @@ class QBasic():
 			print("login unsuccessful due to {0}".format(e))
 			return ""
 
+		self.loggedIn =True
 		print("login as {0} successful.".format(permissionType))
-
-		self.startLoggedInState(permissionType)
+		return permissionType
 
 	def create_acct(self, permissionType):
+		'''
+		Creates an account. Only valid if permissionType is 'agent'.
+		1) Asks for new account number (cannot already exist)
+		2) Asks for new account's name
+		'''
 		if(permissionType != 'agent'):
 			print("createacct not available with permission type {0}".format(permissionType))
 			return
@@ -101,7 +116,11 @@ class QBasic():
 		return
 
 	def delete_acct(self, permissionType):
-		"""i did this one - jefferson"""
+		'''
+		Deletes an account. Only valid if permissionType is 'agent'.
+		1) Asks for delete account number (must already exist)
+		2) Asks for deleted account's name
+		'''
 		if(permissionType != 'agent'):
 			print("deleteacct not available with permission type {0}".format(permissionType))
 			return
@@ -139,7 +158,7 @@ class QBasic():
 			print('Account {0} does not exist'.format(accountNumber))
 			return
 
-		wdrAmtStr = input('Please enter the amount to deposit (in cents): ')
+		wdrAmtStr = input('Please enter the amount to withdraw (in cents): ')
 		try:
 			wdrAmt = int(wdrAmtStr)
 		except ValueError:
@@ -256,7 +275,7 @@ class QBasic():
 			print("logout unsuccessful due to: {0}".format(e))
 			return
 
-		print("Transaction File written and system logged successfully.")
+		print("Transaction summary written and system logged out successfully.")
 		self.loggedIn = False
 
 	def loadValidAccounts(self):
