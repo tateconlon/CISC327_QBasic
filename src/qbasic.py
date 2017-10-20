@@ -66,6 +66,7 @@ class QBasic():
 		return permissionType
 
 	def create_acct(self, permissionType):
+		'''Create an account'''
 		if(permissionType != 'agent'):
 			print("createacct not available with permission type {0}".format(permissionType))
 			return
@@ -92,17 +93,19 @@ class QBasic():
 		return
 
 	def delete_acct(self, permissionType):
-		"""i did this one - jefferson"""
+		'''Delete an account'''
 		if(permissionType != 'agent'):
 			print("deleteacct not available with permission type {0}".format(permissionType))
 			return
 		
+		# Take account number and check it's valid
 		accountNumber = input('Please enter the account number (7 digits): ')
 		if accountNumber not in self.validAccounts:
 			print("Cannot delete account number {0} as it does not exist".format(accountNumber))
 			return
-		accountName = input('Plase input the account name: ')
 
+		# Take account number and check it's valid
+		accountName = input('Please input the account name: ')
 		if not self.isNameValid(accountName):
 			print('Cannot delete account with name {0}. Valid account names are 3-30 alpha characters long, no leading/trailing spaces, but spaces are allowed inside'.format(name))
 			return
@@ -125,11 +128,14 @@ class QBasic():
 			print('Cannot access deposit with permission type {0}'.format(permissionType))
 			return 
 
+
+		# Enter account number and check that it's valid
 		accountNumber = input('Please enter the account number to withdraw from: ')
 		if(accountNumber not in self.validAccounts):
 			print('Account {0} does not exist'.format(accountNumber))
 			return
 
+		# Enter withdrawal amount
 		wdrAmtStr = input('Please enter the amount to deposit (in cents): ')
 		try:
 			wdrAmt = int(wdrAmtStr)
@@ -137,10 +143,12 @@ class QBasic():
 			print('{0} is not a valid number'.format(wdrAmtStr))
 			return
 
+		# Check withdrawal amount is valid for agent session
 		if(permissionType == 'agent' and wdrAmt > 99999999):
 			print('Cannot withdraw more than $999,999.99 in a single transaction in agent mode')
 			return
 
+		# Check withdrawal amount is valid for machine session
 		if(permissionType == 'machine' and wdrAmt > 100000):
 			print('Cannot withdraw more than $1000.00 in a single transaction in machine mode')
 			return
@@ -162,11 +170,13 @@ class QBasic():
 			print('Cannot access deposit with permission type {0}'.format(permissionType))
 			return 
 
+ 		# Enter account number and check that it's valid
 		accountNumber = input('Please enter the account number to deposit into: ')
 		if(accountNumber not in self.validAccounts):
 			print('Account {0} does not exist'.format(accountNumber))
 			return
 
+		# Enter deposit amount
 		depAmtStr = input('Please enter the amount to deposit (in cents): ')
 		try:
 			depAmt = int(depAmtStr)
@@ -174,10 +184,12 @@ class QBasic():
 			print('{0} is not a valid number'.format(depAmtStr))
 			return
 
+		# Check deposit amount is valid for agent session
 		if(permissionType == 'agent' and depAmt > 99999999):
 			print('Cannot deposit more than $999,999.99 in a single transaction in agent mode')
 			return
 
+		# Check deposit amount is valid for machine session
 		if(permissionType == 'machine' and depAmt > 100000):
 			print('Cannot deposit more than $1000.00 in a single transaction in machine mode')
 			return
