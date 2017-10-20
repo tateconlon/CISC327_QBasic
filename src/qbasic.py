@@ -308,7 +308,10 @@ class QBasic():
 		return nameStr.replace(' ','').isalnum() #all non spaces are alpha-numeric
 
 	def isAccountValid(self, accountStr):
-		'''Checks if an account number (represented as a string) is valid (7 numbers long, no leading 0)'''
+		'''
+		Checks if an account number (represented as a string) is valid (7 numbers long, no leading 0)
+		This does not check if an account exists.
+		'''
 		return len(accountStr) == 7 and accountStr.isdigit() and accountStr[0] != "0"
 
 	def writeTransactionSummary(self):
