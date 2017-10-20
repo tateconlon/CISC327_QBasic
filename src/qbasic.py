@@ -7,30 +7,48 @@ class QBasic():
 		self.validAccounts = []	#list of strings
 		self.validAccountsFileName = validAccountsFilename
 		self.transactionSummaryFileName = transactionSummaryFileName
+		self.loggedIn = False
+		self.isRunning = False
 
 	def __del__(self):
-		self.logout()
+		if self.loggedIn:
+			self.logout()
+		self.isRunning = False
 
 	def run(self):
+		'''Starts a QBasic session'''
+		if self.isRunning:
+			print("Cannot run a QBasic session while it is is running")
+			return
+
+		self.isRunning = True
+		self.loggedIn = False
 		print('Welcome to QBasic!')
 		
 		#log in
-		while(input('Please type login to log in: ') != "login"):
-			pass
-		permissionType = self.login()
-		
-		if(permissionType == ""):	#log in unsuccessful
-			continue #go back to top of while True
-		
+		while not self.loggedIn:
+			while(input('Please type login to log in: ') != "login"):
+				pass
+			permissionType = self.login()
+			
+			if not self.loggedIn:	#log in unsuccessful
+				continue #go back to top of while True
+
 		#log in successful
 		self.startLoggedInState(permissionType)
 
-		#logout
+		self.isRunning = False
+
 
 	def startLoggedInState(self, permissionType):
-		'''A loop that represents the logged in state. A return from this means they've logged out'''
-		loggedOut = False
-		while (not loggedOut):
+		'''A loop that represents the logged in state. A return from this means they've logged out.
+		Sets logged in to true.
+		'''
+		if not self.loggedIn:
+			print("You are not logged in, you cannot enter the logged in state!")
+			return
+
+		while (self.loggedIn):
 			transactionInput = input("Input the transaction code: ")
 			if transactionInput == "deposit":
 				self.deposit(permissionType)
@@ -39,7 +57,7 @@ class QBasic():
 			elif transactionInput == "transfer":
 				self.transfer(permissionType)
 			elif transactionInput == "logout":
-				loggedOut = self.logout()
+				self.logout()
 			elif transactionInput == "createacct":
 				self.create_acct(permissionType)
 			elif transactionInput == "deleteacct":
@@ -62,11 +80,16 @@ class QBasic():
 			print("login unsuccessful due to {0}".format(e))
 			return ""
 
+		self.loggedIn =True
 		print("login as {0} successful.".format(permissionType))
 		return permissionType
 
 	def create_acct(self, permissionType):
-		'''Create an account'''
+		'''
+		Creates an account. Only valid if permissionType is 'agent'.
+		1) Asks for new account number (cannot already exist)
+		2) Asks for new account's name
+		'''
 		if(permissionType != 'agent'):
 			print("createacct not available with permission type {0}".format(permissionType))
 			return
@@ -93,7 +116,11 @@ class QBasic():
 		return
 
 	def delete_acct(self, permissionType):
-		'''Delete an account'''
+		'''
+		Deletes an account. Only valid if permissionType is 'agent'.
+		1) Asks for delete account number (must already exist)
+		2) Asks for deleted account's name
+		'''
 		if(permissionType != 'agent'):
 			print("deleteacct not available with permission type {0}".format(permissionType))
 			return
@@ -135,8 +162,7 @@ class QBasic():
 			print('Account {0} does not exist'.format(accountNumber))
 			return
 
-		# Enter withdrawal amount
-		wdrAmtStr = input('Please enter the amount to deposit (in cents): ')
+		wdrAmtStr = input('Please enter the amount to withdraw (in cents): ')
 		try:
 			wdrAmt = int(wdrAmtStr)
 		except ValueError:
@@ -249,13 +275,18 @@ class QBasic():
 
 	def logout(self):
 		'''returns True if logout successful'''
+		if(self.loggedIn == False):
+			print('Cannot logout if already logged out.')
+			return
+
 		try:
 			self.writeTransactionSummary()
 		except Exception as e:
 			print("logout unsuccessful due to: {0}".format(e))
-			return False
-		print("Transaction File written and system logged successfully.")
-		return True
+			return
+
+		print("Transaction summary written and system logged out successfully.")
+		self.loggedIn = False
 
 	def loadValidAccounts(self):
 		'''loads self.validAccounts from valid accounts file. Assumes Valid Accounts file is formatted perfectly'''
