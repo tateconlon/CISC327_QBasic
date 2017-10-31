@@ -112,7 +112,8 @@ class QBasic():
 			return
 
 		if not self.isAccountValid(accountNumber):
-			print("Account number {0} not valid (req. 7 digits long, no leading 0)".format(accountNumber))
+			#print("Account number {0} not valid (req. 7 digits long, no leading 0)".format(accountNumber)) [interactive]
+			print("Account number {0} not valid".format(accountNumber))
 			return
 
 		#name = input('Please enter the account name (3-30 chars): ') [interactive]
@@ -278,7 +279,8 @@ class QBasic():
 			print('{0} -> {1}. Cannot transfer into the same account'.format(accountNumber1, accountNumber2))
 			return
 
-		transAmtStr = input('Please enter the amount to deposit (in cents): ')
+		#transAmtStr = input('Please enter the amount to deposit (in cents): ') [interactive]
+		transAmtStr = input('')
 		try:
 			transAmt = int(transAmtStr)
 		except ValueError:
