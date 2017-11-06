@@ -188,6 +188,10 @@ class QBasic():
 			print('{0} is not a valid number'.format(wdrAmtStr))
 			return
 
+		if(wdrAmt < 1):
+			print('Cannot withdraw less than 1 cent')
+			return
+
 		# Check withdrawal amount is valid for agent session
 		if(permissionType == 'agent' and wdrAmt > 99999999):
 			print('Cannot withdraw more than $999,999.99 in a single transaction in agent mode')
@@ -231,6 +235,10 @@ class QBasic():
 			depAmt = int(depAmtStr)
 		except ValueError:
 			print('{0} is not a valid number'.format(depAmtStr))
+			return
+
+		if(depAmt < 1):
+			print('Cannot deposit less than 1 cent')
 			return
 
 		# Check deposit amount is valid for agent session
@@ -287,6 +295,10 @@ class QBasic():
 			print('{0} is not a valid number'.format(transAmtStr))
 			return
 
+		if(transAmt < 1):
+			print('Cannot transfer less than 1 cent')
+			return
+
 		if(permissionType == 'agent' and transAmt > 99999999):
 			print('Cannot deposit more than $999,999.99 in a single transaction in agent mode')
 			return
@@ -337,6 +349,8 @@ class QBasic():
 		This does not check if an account exists.
 		'''
 		return len(accountStr) == 7 and accountStr.isdigit() and accountStr[0] != "0"
+
+
 
 	def writeTransactionSummary(self):
 		'''Writes the transaction summary file and clears self.transactionFile list'''

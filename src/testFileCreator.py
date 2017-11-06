@@ -62,6 +62,9 @@ def main():
 	shutil.rmtree("../test")
 	loadAndWrite("createacct")
 	loadAndWrite("deleteacct")
+	#loadAndWrite("logout")
+	loadAndWrite("login")
+
 
 if __name__ == "__main__":
 	main()
