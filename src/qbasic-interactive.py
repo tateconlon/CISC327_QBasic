@@ -249,17 +249,17 @@ class QBasic():
 			print('Cannot access transfer with permission type {0}'.format(permissionType))
 			return 
 
-		accountNumber1 = input('Please enter the account number to tranfer from: ')
-		if(accountNumber1 not in self.validAccounts):
-			print('Account {0} does not exist'.format(accountNumber1))
+		accountNumberTo = input('Please enter the account number to tranfer to: ')
+		if(accountNumberTo not in self.validAccounts):
+			print('Account {0} does not exist'.format(accountNumberTo))
 			return
 
-		accountNumber2 = input('Please enter the account number to tranfer from: ')
-		if(accountNumber2 not in self.validAccounts):
-			print('Account {0} does not exist'.format(accountNumber2))
+		accountNumberFrom = input('Please enter the account number to tranfer from: ')
+		if(accountNumberFrom not in self.validAccounts):
+			print('Account {0} does not exist'.format(accountNumberFrom))
 			return
-		if(accountNumber2 == accountNumber1):
-			print('{0} -> {1}. Cannot transfer into the same account'.format(accountNumber1, accountNumber2))
+		if(accountNumberFrom == accountNumberTo):
+			print('{0} -> {1}. Cannot transfer into the same account'.format(accountNumberTo, accountNumberFrom))
 			return
 
 		transAmtStr = input('Please enter the amount to deposit (in cents): ')
@@ -270,19 +270,19 @@ class QBasic():
 			return
 
 		if(permissionType == 'agent' and transAmt > 99999999):
-			print('Cannot deposit more than $999,999.99 in a single transaction in agent mode')
+			print('Cannot transfer more than $999,999.99 in a single transaction in agent mode')
 			return
 
 		if(permissionType == 'machine' and transAmt > 100000):
-			print('Cannot deposit more than $1000.00 in a single transaction in machine mode')
+			print('Cannot transfer more than $1000.00 in a single transaction in machine mode')
 			return
 
 		transAmtStr = transAmtStr.rjust(3, "0") #pad to at least 3 characters	
 
-		newTransLine = "XFR {0} {1} {2} ***".format(accountNumber1, transAmtStr, accountNumber2)
+		newTransLine = "XFR {0} {1} {2} ***".format(accountNumberTo, transAmtStr, accountNumberFrom)
 		self.transactionFile.append(newTransLine)
 
-		print('transfer of {1} cents from {0} to {2} successful.'.format(accountNumber, transAmtStr, accountNumber2))
+		print('transfer of {1} cents from {2} to {0} successful.'.format(accountNumberTo, transAmtStr, accountNumberFrom))
 		pass
 
 	def logout(self):
