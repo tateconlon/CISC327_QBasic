@@ -1,0 +1,8 @@
+login as machine successful	Cannot access transfer with permission type machine	Transaction summary written and system logged out successfully
+login as machine successful	Account 1000007 does not exist	Transaction summary written and system logged out successfully
+login as machine successful	Account 2000007 does not exist	Transaction summary written and system logged out successfully
+login as machine successful	Account 1000007 does not exist	Transaction summary written and system logged out successfully
+login as machine successful	fourteen is not a valid number	Transaction summary written and system logged out successfully
+login as machine successful	Cannot transfer more than $1000.00 in a single transaction in machine mode	Transaction summary written and system logged out successfully
+login as agent successful	"Cannot transfer more than $999,999.99 in a single transaction in agent mode"	Transaction summary written and system logged out successfully
+login as agent successful	transfer of 50000 cents from 1234567 to 2234567 successful	Transaction summary written and system logged out successfully
