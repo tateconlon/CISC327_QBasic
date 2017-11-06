@@ -1,0 +1,3 @@
+login as agent successful
+Account number -1234567 not valid
+Transaction summary written and system logged out successfully
