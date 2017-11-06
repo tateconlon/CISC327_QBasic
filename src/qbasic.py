@@ -288,11 +288,11 @@ class QBasic():
 			return
 
 		if(permissionType == 'agent' and transAmt > 99999999):
-			print('Cannot deposit more than $999,999.99 in a single transaction in agent mode')
+			print('Cannot transfer more than $999,999.99 in a single transaction in agent mode')
 			return
 
 		if(permissionType == 'machine' and transAmt > 100000):
-			print('Cannot deposit more than $1000.00 in a single transaction in machine mode')
+			print('Cannot transfer more than $1000.00 in a single transaction in machine mode')
 			return
 
 		transAmtStr = transAmtStr.rjust(3, "0") #pad to at least 3 characters	
