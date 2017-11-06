@@ -1,6 +1,9 @@
-login,machine,deposit,1234567,50000,logout
-login,agent,deposit,1234567,50000,logout
-login,machine,deposit,1000007,50000,logout
-login,machine,deposit,1234567,eleventeen,logout
-login,machine,deposit,1234567,5000000,logout
-login,agent,deposit,1234567,999999999,logout
+Success Machine,login,machine,deposit,1234567,50000,logout
+Success Agent,login,agent,deposit,1234567,50000,logout
+Invalid account number - doesn't exist,login,machine,deposit,1000007,50000,logout
+Invalid amount - non numeric,login,machine,deposit,1234567,eleventeen,logout
+Deposit over 1000 on machine,login,machine,deposit,1234567,5000000,logout
+Deposit over 999999.99 in agent mode,login,agent,deposit,1234567,999999999,logout
+Invalid amount - negative,login,agent,deposit,1234567,-1,logout
+Invalid amount - less than a dollar,login,agent,deposit,1234567,0,logout
+Invalid amount - fractional,login,agent,deposit,1234567,1.99,logout
