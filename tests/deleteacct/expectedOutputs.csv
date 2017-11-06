@@ -1,0 +1,6 @@
+login as agent successful	Deletion of account 1234567 test successful	Transaction summary written and system logged out successfully
+login as machine successful	deleteacct not available with permission type machine	Transaction summary written and system logged out successfully
+login as agent successful	a is not a valid account name	Transaction summary written and system logged out successfully
+login as agent successful	Test123456789012345678901234567 is not a valid account name	Transaction summary written and system logged out successfully
+login as agent successful	Cannot delete account number 2234567 as it does not exist	Transaction summary written and system logged out successfully
+login as agent successful	Cannot delete account number 2234567 as it does not exist	Transaction summary written and system logged out successfully

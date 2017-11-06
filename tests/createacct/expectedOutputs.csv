@@ -1,0 +1,12 @@
+login as agent successful,createacct 2234567 TestAccount successful,Transaction summary written and system logged out successfully
+login as machine successful,createacct not available with permission type machine,Transaction summary written and system logged out successfully
+login as agent successful,Cannot create account number 1234567 as it already exists,Transaction summary written and system logged out successfully
+login as agent successful,Account number 0123456 not valid,Transaction summary written and system logged out successfully
+login as agent successful,Account number 123456 not valid,Transaction summary written and system logged out successfully
+login as agent successful,Account number 12345678 not valid,Transaction summary written and system logged out successfully
+login as agent successful,Account number abcdefg not valid,Transaction summary written and system logged out successfully
+login as agent successful,Account number -1234567 not valid,Transaction summary written and system logged out successfully
+login as agent successful,TestAccount123456789123456789123456789 is not a valid account name,Transaction summary written and system logged out successfully
+login as agent successful,Te is not a valid account name,Transaction summary written and system logged out successfully
+login as agent successful, TestAccount is not a valid account name,Transaction summary written and system logged out successfully
+login as agent successful,TestAccount  is not a valid account name,Transaction summary written and system logged out successfully

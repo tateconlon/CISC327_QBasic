@@ -1,6 +1,6 @@
-login,agent,deleteacct,1234567,test,logout
-login ,machine,deleteacct,1234567,Test,logout
-login,agent,deleteacct,1234567,a,logout
-login,agent,deleteacct,1234567,Test123456789012345678901234567,logout
-login,agent,createacct,1234567,test,deleteacct,1234567,test,logout
-login,agent,deleteacct,1234567,test,logout
+Valid Flow - delete 1234567 test,login,agent,deleteacct,1234567,test,logout,,,
+Cannot deleteacct in machine mode,login ,machine,deleteacct,1234567,Test,logout,,,
+a is too short account name,login,agent,deleteacct,1234567,a,logout,,,
+Test123456789012345678901234567 is too long account name,login,agent,deleteacct,1234567,Test123456789012345678901234567,logout,,,
+cannot delete newly created accounts,login,agent,createacct,2234567,test,deleteacct,2234567,test,logout
+cannot delete account that does not exist,login,agent,deleteacct,2234567,test,logout,,,
