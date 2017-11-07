@@ -124,7 +124,7 @@ class QBasic():
 			print('{0} is not a valid account name'.format(name))
 			return
 
-		newTransLine = "NEW {0} 000 00000000 {1}".format(accountNumber, name)
+		newTransLine = "NEW {0} 000 0000000 {1}".format(accountNumber, name)
 		self.transactionFile.append(newTransLine)
 
 		print("createacct {0} {1} successful".format(accountNumber, name))
@@ -204,7 +204,7 @@ class QBasic():
 
 		wdrAmtStr = wdrAmtStr.rjust(3, "0") #pad to at least 3 characters	
 
-		newTransLine = "WDR {0} {1} 00000000 ***".format(accountNumber, wdrAmtStr)
+		newTransLine = "WDR {0} {1} 0000000 ***".format(accountNumber, wdrAmtStr)
 		self.transactionFile.append(newTransLine)
 
 		print('withdraw {0} {1} successful'.format(accountNumber, wdrAmtStr))
@@ -251,7 +251,7 @@ class QBasic():
 			print('Cannot deposit more than $1000.00 in a single transaction in machine mode')
 			return
 
-		newTransLine = "DEP {0} {1} 00000000 ***".format(accountNumber, depAmtStr)
+		newTransLine = "DEP {0} {1} 0000000 ***".format(accountNumber, depAmtStr)
 		self.transactionFile.append(newTransLine)
 
 		depAmtStr = depAmtStr.rjust(3, "0") #pad to at least 3 characters
@@ -324,7 +324,7 @@ class QBasic():
 			print("logout unsuccessful due to: {0}".format(e))
 			return
 
-		print("Transaction summary written and system logged out successfully")
+		print("Transaction summary written and system logged out successfully", end="")
 		self.loggedIn = False
 
 	def loadValidAccounts(self):
@@ -376,7 +376,10 @@ def main():
 
 	#create and run qbasic session
 	q = QBasic(args['validAccountFileName'], args['transactionSummaryFileName'])
-	q.run()
+	try:
+		q.run()
+	except EOFError as e:
+		pass #reached end of file for reading before logging in
 
 #if run as script, run main()
 if __name__ == "__main__":

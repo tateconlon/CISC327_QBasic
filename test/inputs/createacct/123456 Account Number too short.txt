@@ -2,5 +2,4 @@ login
 agent
 createacct
 123456
-TestAccount
 logout

@@ -1,11 +1,11 @@
 Valid Flow,login,agent,createacct,2234567,TestAccount,logout
-Not in agent mode,login,machine,createacct,2234567,TestAccount,logout
-1234567 Account already exists,login,agent,createacct,1234567,TestAccount,logout
-0123456 Account Number leading 0,login,agent,createacct,0123456,TestAccount,logout
-123456 Account Number too short,login,agent,createacct,123456,TestAccount,logout
-12345678 Account Number too long,login,agent,createacct,12345678,TestAccount,logout
-abcdefg Account Number contains non-numeric chars,login,agent,createacct,abcdefg,TestAccount,logout
--1234567 is a negative account number,login,agent,createacct,-1234567,TestAccount,logout
+Not in agent mode,login,machine,createacct,logout
+1234567 Account already exists,login,agent,createacct,1234567,logout
+0123456 Account Number leading 0,login,agent,createacct,0123456,logout
+123456 Account Number too short,login,agent,createacct,123456,logout
+12345678 Account Number too long,login,agent,createacct,12345678,logout
+abcdefg Account Number contains non-numeric chars,login,agent,createacct,abcdefg,logout
+-1234567 is a negative account number,login,agent,createacct,-1234567,logout
 TestAccount123456789123456789123456789 Account Name Too Long,login,agent,createacct,2234567,TestAccount123456789123456789123456789,logout
 Te Account Name Too Short,login,agent,createacct,2234567,Te,logout
  TestAccount Space before Account Name,login,agent,createacct,2234567, TestAccount,logout
