@@ -1,6 +1,4 @@
 login
 machine
 createacct
-2234567
-TestAccount
 logout

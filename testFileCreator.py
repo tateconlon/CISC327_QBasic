@@ -6,16 +6,15 @@ import csv
 import os
 import shutil
 
-newInputsPath = "../test/inputs/{0}/{1}.txt"	#transaction, testName
-newExpectedOutputsPath = "../test/expectedOutput/{0}/{1}.txt"
-newExpectedTransactionFilePath = "../test/expectedTF/{0}/{1}.txt"
-#newActualOutputPath = "../test/actualOutput/{0}/{1}.txt"
-newValidAccountsPath = "../test/validAccounts/{0}/validAccounts.txt" #transaction
+newInputsPath = "test/inputs/{0}/{1}.txt"	#transaction, testName
+newExpectedOutputsPath = "test/expectedOutput/{0}/{1}.txt"
+newExpectedTransactionFilePath = "test/expectedTF/{0}/{1}.txt"
+newValidAccountsPath = "test/validAccounts/{0}/validAccounts.txt" #transaction
 
 validAccountsTxt = "validAccounts.txt"
 TFtxt = "transactionSummary.txt"
 
-csvInputPath = "../tests/{0}/{1}" #transaction, filename
+csvInputPath = "tests/{0}/{1}" #transaction, filename
 
 def loadAndWrite(transactionName):
 	with open(csvInputPath.format(transactionName, "inputs.csv")) as csvInput:
@@ -34,43 +33,50 @@ def loadAndWrite(transactionName):
 					test.TF = sanatize_input(next(csv_TF_data))
 					testList.append(test)
 
-	os.makedirs("../test/inputs/{0}".format(transactionName), exist_ok=True)
-	os.makedirs("../test/expectedOutput/{0}".format(transactionName), exist_ok=True)
-	os.makedirs("../test/expectedTF/{0}".format(transactionName), exist_ok=True)
-	os.makedirs("../test/validAccounts/{0}".format(transactionName), exist_ok=True)				
+	os.makedirs("test/inputs/{0}".format(transactionName), exist_ok=True)
+	os.makedirs("test/expectedOutput/{0}".format(transactionName), exist_ok=True)
+	os.makedirs("test/expectedTF/{0}".format(transactionName), exist_ok=True)
+	os.makedirs("test/validAccounts/{0}".format(transactionName), exist_ok=True)				
 
 	for test in testList:
-		with open(newInputsPath.format(transactionName, test.name), "w") as f:
+		with open(newInputsPath.format(transactionName, test.name), "a") as f:
 			f.write("\n".join(test.inputs))
-		with open(newExpectedOutputsPath.format(transactionName, test.name), "w") as f:
+		with open(newExpectedOutputsPath.format(transactionName, test.name), "a") as f:
 			f.write("\n".join(test.exOut))
-		with open(newExpectedTransactionFilePath.format(transactionName, test.name), "w") as f:
-			f.write("\n".join(test.TF))
+		if len(test.TF) > 0:
+			with open(newExpectedTransactionFilePath.format(transactionName, test.name), "a") as f:
+				f.write("\n".join(test.TF))
 
 	#Valid Accounts File
 	with open(csvInputPath.format(transactionName, validAccountsTxt)) as va:
-		with open(newValidAccountsPath.format(transactionName), "w") as f:
+		with open(newValidAccountsPath.format(transactionName), "a") as f:
 			f.writelines(va.readlines())
 
 def sanatize_input(lines):
 	new_lines = []
 	for line in lines:
-		temp_line = line.strip()
+		temp_line = line.strip("\t\n")
 		if temp_line != "":
-			new_lines.append(temp_line)
+			if temp_line == "%": #HACK how to define blank lines in csv 
+				new_lines.append("")
+			else:
+				new_lines.append(temp_line)
 
 	return new_lines
 
 class Test():
 	pass
 
+def init():
+	shutil.rmtree("test", ignore_errors=True )
+
 def main():
-	shutil.rmtree("../test", ignore_errors=True )
+	init()
 	loadAndWrite("createacct")
 	loadAndWrite("deleteacct")
-	#loadAndWrite("logout")
+	loadAndWrite("logout")
 	loadAndWrite("login")
-
+	loadAndWrite("transfer")
 
 if __name__ == "__main__":
 	main()

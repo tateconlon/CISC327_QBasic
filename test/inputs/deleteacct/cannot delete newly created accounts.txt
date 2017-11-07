@@ -5,5 +5,4 @@ createacct
 test
 deleteacct
 2234567
-test
 logout
