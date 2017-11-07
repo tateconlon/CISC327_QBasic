@@ -1,7 +1,7 @@
-Withdraw valid amount in machine mode,login,machine,deposit,1234567,500,withdraw,1234567,100,logout,,,,,,,,,,,,
-Withdraw valid amount in agent mode,login,agent,deposit,1234567,500000,withdraw,1234567,499999,logout,,,,,,,,,,,,
-Attempt to withdraw over 1000 from one account in machine mode,login,machine,deposit,1234567,100000,deposit,1234567,100000,withdraw,1234567,100001,logout,,,,,,,,,
-,login,machine,deposit,1234567,100000,deposit,1234567,100000,deposit,2345678,100000,withdraw,1234567,50001,logout
-"Attempt to withdraw over $999,999.99 in a single transaction in agent session",login,agent,deposit,1234567,99999999,deposit,1234567,99999999,withdraw,1234567,100000000,logout,,,,,,,,,
-Attempt to withdraw from account that does not exist in agent mode,login,agent,withdraw,1234567,1,logout,,,,,,,,,,,,,,,
-Attempt to withdraw from account that does not exist in machine mode,login,machine,withdraw,1234567,1,logout,,,,,,,,,,,,,,,
+Withdraw valid amount in machine mode,login,machine,deposit,1234567,500,withdraw,1234567,100,logout
+Withdraw valid amount in agent mode,login,agent,deposit,1234567,500000,withdraw,1234567,499999,logout
+Attempt to withdraw over 1000 from one account in machine mode,login,machine,deposit,1234567,100000,deposit,1234567,100000,withdraw,1234567,100001,logout
+login,machine,deposit,1234567,100000,deposit,1234567,100000,deposit,2345678,100000,withdraw,1234567,50001,logout
+"Attempt to withdraw over $999,999.99 in a single transaction in agent session",login,agent,deposit,1234567,99999999,deposit,1234567,99999999,withdraw,1234567,100000000,logout
+Attempt to withdraw from account that does not exist in agent mode,login,agent,withdraw,1234567,1,logout
+Attempt to withdraw from account that does not exist in machine mode,login,machine,withdraw,1234567,1,logout
