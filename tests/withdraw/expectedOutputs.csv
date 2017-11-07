@@ -1,0 +1,7 @@
+login as machine successful,withdraw 1234567 500 successful,withdraw 1234567 100 successful,Transaction summary written and system logged out successfully
+login as agent successful,deposit 1234567 500000 successful,withdraw 1234567 499999 successful,Transaction summary written and system logged out successfully
+login as machine successful,deposit 1234567 100000 successful,deposit 1234567 100000 successful,cannot withdraw more than $1000.00 in a single transaction in machine mode,Transaction summary written and system logged out successfully
+login as machine successful,deposit 1234567 100000 successful,deposit 1234567 100000 successful,deposit 2345678 100000 successful,cannot withdraw more than $1000.00 in a single transaction in machine mode, withdraw 1234567 500000 successful, withdraw 2345678 500000 successful,Transaction summary written and system logged out successfully
+login as agent successful,deposit 1234567 99999999 successful,deposit 1234567 99999999 successful,"cannot withdraw more than $999,999.99 in a single transaction in machine mode",Transaction summary written and system logged out successfully
+login as agent successful,Account 1234567 does not exist,Transaction summary written and system logged out successfully
+login as machine successful,Account 1234567 does not exist,Transaction summary written and system logged out successfully
