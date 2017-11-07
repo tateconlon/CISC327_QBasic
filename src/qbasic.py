@@ -309,7 +309,7 @@ class QBasic():
 		newTransLine = "XFR {0} {1} {2} ***".format(accountNumberTo, transAmtStr, accountNumberFrom)
 		self.transactionFile.append(newTransLine)
 
-		print('transfer of {1} cents from {0} to {2} successful.'.format(accountNumberFrom, transAmtStr, accountNumberTo))
+		print('transfer of {1} cents from {0} to {2} successful'.format(accountNumberFrom, transAmtStr, accountNumberTo))
 		pass
 
 	def logout(self):
