@@ -29,11 +29,9 @@ def loadAndWrite(transactionName):
 				for row in csv_in_data:
 					test = Test()
 					test.name = row[0]
-					test.inputs = [val for val in row[1:] if val != ""]
-					test.exOut = next(csv_ExOut_data)
-					test.exOut = [val for val in test.exOut if val != ""]
-					test.TF = next(csv_TF_data)
-					test.TF = [val for val in test.TF if val != ""]
+					test.inputs = sanatize_input(row[1:])
+					test.exOut = sanatize_input(next(csv_ExOut_data))
+					test.TF = sanatize_input(next(csv_TF_data))
 					testList.append(test)
 
 	os.makedirs("../test/inputs/{0}".format(transactionName), exist_ok=True)
@@ -54,12 +52,20 @@ def loadAndWrite(transactionName):
 		with open(newValidAccountsPath.format(transactionName), "w") as f:
 			f.writelines(va.readlines())
 
+def sanatize_input(lines):
+	new_lines = []
+	for line in lines:
+		temp_line = line.strip()
+		if temp_line != "":
+			new_lines.append(temp_line)
+
+	return new_lines
+
 class Test():
 	pass
 
-
 def main():
-	shutil.rmtree("../test")
+	shutil.rmtree("../test", ignore_errors=True )
 	loadAndWrite("createacct")
 	loadAndWrite("deleteacct")
 	#loadAndWrite("logout")

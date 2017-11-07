@@ -152,7 +152,7 @@ class QBasic():
 		accountName = input('')
 		if not self.isNameValid(accountName):
 			#print('Cannot delete account with name {0}. Valid account names are 3-30 alpha characters long, no leading/trailing spaces, but spaces are allowed inside'.format(name)) [interactive]
-			print('{0} is not a valid account name'.format(name))
+			print('{0} is not a valid account name'.format(accountName))
 			return
 
 		newTransLine = "DEL {0} 000 0000000 {1}".format(accountNumber, accountName)
