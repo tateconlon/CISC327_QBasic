@@ -1,0 +1,6 @@
+login
+agent
+deposit
+1234567
+1.99
+logout

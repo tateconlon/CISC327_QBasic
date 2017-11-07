@@ -1,0 +1,6 @@
+login as agent successful
+Account 1234567 does not exist
+transaction code 500000 invalid
+Account 1234567 does not exist
+transaction code 499999 invalid
+Transaction summary written and system logged out successfully

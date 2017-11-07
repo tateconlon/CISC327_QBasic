@@ -1,0 +1,4 @@
+login as agent successful
+deposit 1234567 500000 successful
+withdraw 1234567 499999 successful
+Transaction summary written and system logged out successfully

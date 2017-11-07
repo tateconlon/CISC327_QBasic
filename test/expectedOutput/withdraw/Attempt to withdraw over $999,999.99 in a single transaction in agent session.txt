@@ -1,0 +1,5 @@
+login as agent successful
+deposit 1234567 99999999 successful
+deposit 1234567 99999999 successful
+cannot withdraw more than $999,999.99 in a single transaction in machine mode
+Transaction summary written and system logged out successfully

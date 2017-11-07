@@ -111,7 +111,7 @@ def compareAndGenerateReport(transactionName):
 						#print("- pass output {0}/{1}".format(transactionName, filename))
 
 
-testTrans = ["createacct", "deleteacct", "login"]
+testTrans = ["createacct", "deleteacct", "login", "transfer", "deposit", "withdraw"]
 	
 
 def main():

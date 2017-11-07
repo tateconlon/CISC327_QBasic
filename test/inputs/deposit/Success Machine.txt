@@ -1,0 +1,6 @@
+login
+machine
+deposit
+1234567
+50000
+logout

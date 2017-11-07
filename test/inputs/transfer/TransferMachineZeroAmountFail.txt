@@ -1,0 +1,7 @@
+login
+machine
+transfer
+1234567
+2234567
+0
+logout

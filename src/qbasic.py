@@ -272,17 +272,17 @@ class QBasic():
 			print('Cannot access transfer with permission type {0}'.format(permissionType))
 			return 
 
-		accountNumberTo = input('') #input('Please enter the account number to tranfer to: ')
-		if(accountNumberTo not in self.validAccounts):
-			print('Account {0} does not exist'.format(accountNumberTo))
-			return
-
-		accountNumberFrom = input('') #input('Please enter the account number to tranfer from: ')
+		accountNumberFrom = input('') #input('Please enter the account number to tranfer to: ')
 		if(accountNumberFrom not in self.validAccounts):
 			print('Account {0} does not exist'.format(accountNumberFrom))
 			return
-		if(accountNumberFrom == accountNumberTo):
-			print('{0} -> {1}. Cannot transfer into the same account'.format(accountNumberTo, accountNumberFrom))
+
+		accountNumberTo = input('') #input('Please enter the account number to tranfer from: ')
+		if(accountNumberTo not in self.validAccounts):
+			print('Account {0} does not exist'.format(accountNumberTo))
+			return
+		if(accountNumberTo == accountNumberFrom):
+			print('{0} -> {1}. Cannot transfer into the same account'.format(accountNumberFrom, accountNumberTo))
 			return
 
 		transAmtStr = input('') #input('Please enter the amount to deposit (in cents): ')
