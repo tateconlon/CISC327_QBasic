@@ -27,6 +27,7 @@ class QBasicBackEnd():
 		pass
 
 	def delete_acct(self, account, name):
+		pass
 
 
 	#reads in OldMasterAccountsFile - accounts with #, balance and names
