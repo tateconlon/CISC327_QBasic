@@ -6,7 +6,22 @@ class QBasicBackEnd():
 	#applies transactions from merged transaction summary file:
 	#if a *constraint* is violated, then you skip the line (causes a negative balance, account already exists, attempting to delete account with money in it)
 	#Need to validate the transaction summary lines: if a transaction is malformed it should abort and quit entirely
+
+#{accountNumber : (balance, name)}
+
+
+#SORTING PSEUDO
+#list_of_account_nums = dict.keys()
+#list_of_account_nums.sort()
+#for each num in sortedListNums: write dict[num]
+
+
 	pass
+
+account: #, balance, name
+
+1234567s
+
 
 
 def qbasic_backend_parse_args():
