@@ -1,6 +1,5 @@
 login
 agent
 withdraw
-1234567
-1
+2234567
 logout

@@ -1,8 +1,5 @@
 login
 machine
-deposit
-1234567
-500
 withdraw
 1234567
 100

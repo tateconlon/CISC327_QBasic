@@ -1,9 +1,9 @@
-"login as machine successful	",deposit 1234567 50000 successful,Transaction summary written and system logged out successfully
-login as agent successful,deposit 1234567 50000 successful ,Transaction summary written and system logged out successfully
-login as machine successful,Account 1000007 does not exist ,Transaction summary written and system logged out successfully
+"login as machine successful",deposit 1234567 50000 successful,Transaction summary written and system logged out successfully
+login as agent successful,deposit 1234567 50000 successful,Transaction summary written and system logged out successfully
+login as machine successful,Account 1000007 does not exist,Transaction summary written and system logged out successfully
 login as machine successful,eleventeen is not a valid number,Transaction summary written and system logged out successfully
-login as machine successful,Cannot deposit more than $1000.00 in a single transaction in machine mode ,Transaction summary written and system logged out successfully
-login as agent successful,Cannot deposit more than $999999.99 in a single transaction in agent mode,Transaction summary written and system logged out successfully
+login as machine successful,Cannot deposit more than $1000.00 in a single transaction in machine mode,Transaction summary written and system logged out successfully
+login as agent successful,"Cannot deposit more than $999,999.99 in a single transaction in agent mode",Transaction summary written and system logged out successfully
 login as agent successful,Cannot deposit less than 1 cent,Transaction summary written and system logged out successfully
 login as agent successful,Cannot deposit less than 1 cent,Transaction summary written and system logged out successfully
-login as agent successful,1.54 is not a valid number ,Transaction summary written and system logged out successfully
+login as agent successful,1.99 is not a valid number,Transaction summary written and system logged out successfully
