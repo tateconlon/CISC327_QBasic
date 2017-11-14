@@ -1,13 +1,42 @@
 import argparse
 
 class QBasicBackEnd():
+
+	dict_of_accounts = {} #key = str(accountName): val = (int(balance), str(name))
+
+	def read_master_accounts_file(self, filename):
+		lines = read_file(filename)
+
+		dict_of_accounts = {} #empty dict_of_accounts
+
+		for i, line in enumerate(lines):
+			fields = line.split()
+			if len(fields != 3):
+				throw new Exception("Master Accounts File has invalid line @ line #")
+
+	def transfer(self, accountTo, accountFrom, amount):
+		pass
+
+	def withdraw(self, account, amt):
+		pass
+
+	def deposit(self, account, amt):
+		pass
+
+	def create_acct(self, account, name):
+		pass
+
+	def delete_acct(self, account, name):
+
+
 	#reads in OldMasterAccountsFile - accounts with #, balance and names
 	#If Master Accounts File is malformed, abort
 	#applies transactions from merged transaction summary file:
 	#if a *constraint* is violated, then you skip the line (causes a negative balance, account already exists, attempting to delete account with money in it)
 	#Need to validate the transaction summary lines: if a transaction is malformed it should abort and quit entirely
 
-#{accountNumber : (balance, name)}
+# dictionary_of_accounts = {accountNumber : (balance, name)}
+# dictionary['1234567'] = (1234, "fuck")
 
 
 #SORTING PSEUDO
@@ -17,10 +46,6 @@ class QBasicBackEnd():
 
 
 	pass
-
-account: #, balance, name
-
-1234567s
 
 
 
