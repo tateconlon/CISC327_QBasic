@@ -20,11 +20,10 @@ class QBasicBackEnd():
 
 			account_num, balance, name = fields[0], fields[1], fields[2]
 
-			if dict_of_accounts[fields]
+			#if dict_of_accounts[fields]
 
 
 	def run(self, filenames):
-
 		try:
 			pass
 		except e as QBasicBackEndException:
@@ -38,9 +37,26 @@ class QBasicBackEnd():
 		pass
 
 	def write_master_accounts(self, filename):
-		#need to sort
-		#fuckin' write dawg
-		#make sure that a line is not oer 47 characters
+	"""write to the new master accounts file"""
+
+		#sorts all account numbers
+		accts = sorted([acct for acct in dict_of_accounts])
+
+		new_master_acct_txt = ""		
+		#Write account number, account balance in cents, and the account name 
+		for acct in accts:
+			bal = str(dict_of_accounts[acct][0])
+			name = dict_of_accounts[acct][1]
+			line = acct + " " + bal + " " + name
+
+			# Error if the line is longer than 47 charachters - 30 for name - 7 for acct num - 8 for bal
+			if len(line) > 47:
+				#THROW ERROR OR LOG?
+				pass
+			new_master_acct_txt += line + "\n\n"
+
+		write_file(filename, new_master_acct_txt)
+		return
 
 
 	def transfer(self, accountTo, accountFrom, amount):
@@ -61,6 +77,12 @@ class QBasicBackEnd():
 		#can't delete account with non-zero balance
 		#names have to match
 		#account has to exist
+		pass
+
+
+	def change_balance(account, val)
+	"""change the balance of the account ins the parameter by the val param"""
+	
 		pass
 
 
