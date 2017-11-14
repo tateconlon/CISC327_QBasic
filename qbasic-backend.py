@@ -42,7 +42,11 @@ class QBasicBackEnd():
 		for i, line in enumerate(lines):
 			fields = line.split()
 			if len(fields != 3):
-				throw new QBasicBackEndException("Master Accounts File has invalid line @ line #")
+				raise QBasicBackEndException("Master Accounts File has invalid line @ line #")
+
+			account_num, balance, name = fields[0], fields[1], fields[2]
+
+			if dict_of_accounts[fields]
 
 
 	def run(self, filenames):
@@ -145,8 +149,9 @@ def write_file(filename, lines):
 def main():
 	cmd_args = qbasic_backend_parse_args()
 	print(cmd_args)
-	write_file("hi", [])
-	print(read_file("hi"))
+	fields = [1,2,3]
+	account_num, balance, name = fields[0], fields[1], fields[2]
+	print(account_num, balance, name)
 
 if __name__ == "__main__":
 	main()
