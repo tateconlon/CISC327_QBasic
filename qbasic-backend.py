@@ -1,7 +1,33 @@
 import argparse
 
 class QBasicBackEndException(Exception):
+        """Base class for all other exceptions specific to the QBasic Backend"""
+        
 	pass
+
+class NonZeroBalanceError(QBasicBackEndException):
+        """no account should ever have a negative balance"""
+        
+        pass
+
+class NegativeBalanceError(QBasicBackEndException):
+        """a deleted account must have a zero balance"""
+        
+        pass
+
+class AccountNumberInUseError(QBasicBackEndException):
+        """a created account must have a new, unused account number"""
+        
+        pass
+
+class NameMismatchError(QBasicBackEndException):
+        """the name given in a delete transaction must match the name associated with the deleted account"""
+        
+        pass
+
+class InvalidFieldFatalError(QBasicBackEndException):
+
+        pass
 
 
 class QBasicBackEnd():
@@ -22,15 +48,22 @@ class QBasicBackEnd():
 	def run(self, filenames):
 
 		try:
+                        #conditional
+                        #raise specific QBasicBackEndException
 			pass
 		except e as QBasicBackEndException:
 			pass
-		except e as:
+		except e as Exception:
 			pass
 
 
 
-	def read_transaction_summary_file(self, filename):
+	def read_merged_transaction_summary_file(self, filename):
+                try:
+                        pass
+                except e as InvalidFieldFatalError:
+                        return
+                
 		pass
 
 	def write_master_accounts(self, filename):
