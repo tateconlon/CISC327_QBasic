@@ -14,19 +14,41 @@ class QBasicBackEnd():
 			if len(fields != 3):
 				throw new Exception("Master Accounts File has invalid line @ line #")
 
+
+	def run(self, filenames):
+
+
+		pass
+
+
+
+	def read_transaction_summary_file(self, filename):
+		pass
+
+	def write_master_accounts(self, filename):
+		#need to sort
+		#fuckin' write dawg
+		#make sure that a line is not oer 47 characters
+
+
 	def transfer(self, accountTo, accountFrom, amount):
 		pass
 
 	def withdraw(self, account, amt):
+		#can't over withdraw
 		pass
 
 	def deposit(self, account, amt):
 		pass
 
 	def create_acct(self, account, name):
+		#account can't exist
 		pass
 
 	def delete_acct(self, account, name):
+		#can't delete account with non-zero balance
+		#names have to match
+		#account has to exist
 		pass
 
 
