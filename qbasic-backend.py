@@ -1,7 +1,39 @@
 import argparse
 
 class QBasicBackEndException(Exception):
+        """Base class for all other exceptions specific to the QBasic Back End"""
+        def __init__(self,*args,**kwargs):
+                Exception.__init__(self,*args,**kwargs)
 	pass
+
+class NonZeroBalanceError(QBasicBackEndException):
+        """no account should ever have a negative balance"""
+        def __init__(self,*args,**kwargs):
+                QBasicBackEndException.__init__(self,*args,**kwargs)
+        pass
+
+class NegativeBalanceError(QBasicBackEndException):
+        """a deleted account must have a zero balance"""
+        def __init__(self,*args,**kwargs):
+                QBasicBackEndException.__init__(self,*args,**kwargs)
+        pass
+
+class AccountNumberInUseError(QBasicBackEndException):
+        """a created account must have a new, unused account number"""
+        def __init__(self,*args,**kwargs):
+                QBasicBackEndException.__init__(self,*args,**kwargs)
+        pass
+
+class NameMismatchError(QBasicBackEndException):
+        """the name given in a delete transaction must match the name associated with the deleted account"""
+        def __init__(self,*args,**kwargs):
+                QBasicBackEndException.__init__(self,*args,**kwargs)
+        pass
+
+class InvalidFieldFatalError(QBasicBackEndException):
+        """Back End encounters an invalid field, it should immediately stop and log a fatal error on the terminal"""
+        def __init__(self,*args,**kwargs):
+                QBasicBackEndException.__init__(self,*args,**kwargs)
 
 
 class QBasicBackEnd():
@@ -25,15 +57,23 @@ class QBasicBackEnd():
 
 	def run(self, filenames):
 		try:
+                        #conditional
+                        #raise specific QBasicBackEndException
 			pass
 		except e as QBasicBackEndException:
 			pass
-		except e as:
+		except e as Exception:
 			pass
 
 
 
-	def read_transaction_summary_file(self, filename):
+	def read_merged_transaction_summary_file(self, filename):
+                try:
+                        pass
+                except e as InvalidFieldFatalError:
+                        print("Invalid Field")
+                        exit(1)
+                
 		pass
 
 	def write_master_accounts(self, filename):
