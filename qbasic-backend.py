@@ -28,11 +28,21 @@ def qbasic_backend_parse_args():
 
 	return args
 
+def read_file(filename):
+	with open(filename, "r") as f:
+		return f.readlines()
+
+def write_file(filename, lines):	
+		with open(filename, "w") as f:
+			f.writelines(lines)
+
 
 
 def main():
 	cmd_args = qbasic_backend_parse_args()
 	print(cmd_args)
+	write_file("hi", [])
+	print(read_file("hi"))
 
 if __name__ == "__main__":
 	main()
