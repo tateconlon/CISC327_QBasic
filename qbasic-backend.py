@@ -1,5 +1,9 @@
 import argparse
 
+class QBasicBackEndException(Exception):
+	pass
+
+
 class QBasicBackEnd():
 
 	dict_of_accounts = {} #key = str(accountName): val = (int(balance), str(name))
@@ -12,13 +16,17 @@ class QBasicBackEnd():
 		for i, line in enumerate(lines):
 			fields = line.split()
 			if len(fields != 3):
-				throw new Exception("Master Accounts File has invalid line @ line #")
+				throw new QBasicBackEndException("Master Accounts File has invalid line @ line #")
 
 
 	def run(self, filenames):
 
-
-		pass
+		try:
+			pass
+		except e as QBasicBackEndException:
+			pass
+		except e as:
+			pass
 
 
 
