@@ -46,16 +46,18 @@ class QBasicBackEnd():
 		dict_of_accounts = {} #empty dict_of_accounts
 
 		for i, line in enumerate(lines):
-			fields = line.split()
+			fields = str_split(line)
 			if len(fields != 3):
-				raise QBasicBackEndException("Master Accounts File has invalid line @ line #")
+				raise InvalidFieldFatalError("Master Accounts File has invalid line @ line #")
 
 			account_num, balance, name = fields[0], fields[1], fields[2]
 
 			#if dict_of_accounts[fields]
 
-
-	def run(self, filenames):
+        """param - MTSF Merged Transation Summary File, oldMAF old Master Accounts File, newMAF new Master Accounts File, newVAF new Valid Accounts File"""
+	def run(self, MTSF,oldMAF,newMAF,newVAF):
+                read_master_accounts_file(oldMAF)
+                read_merged_transaction_summary_file(MTSF)
 		try:
                         #conditional
                         #raise specific QBasicBackEndException
@@ -64,12 +66,24 @@ class QBasicBackEnd():
 			pass
 		except e as Exception:
 			pass
-
-
+		
+#Format of MTSF lines. Stored in a list
+#[{"code":"CCC","Account1":"AAAA","Amount":"MMMM","Account2":"BBBB","AccountName":"NNNN"}]
 
 	def read_merged_transaction_summary_file(self, filename):
+                MTSFLines = read_file(filename)
+                parsedMTSF = []
                 try:
-                        pass
+                        for line in MTSFLines:
+                                lineDict = {}
+                                fields = str_split(line)
+                                if len(fields != 5):
+                                        #TODO specify which line
+                                        raise InvalidFieldFatalError("Merged Transaction Summary File has an invalid number of fields")
+                                if (fields[0] not in ["DEP","WDR","XFR","NEW","EOS"]):
+                                        raise InvalidFieldFatalError("Merged Transaction Summary File has an invalid transaction code")
+                                if (fields[1]
+                                
                 except e as InvalidFieldFatalError:
                         print("Invalid Field")
                         exit(1)
@@ -85,15 +99,20 @@ class QBasicBackEnd():
 		new_master_acct_txt = ""		
 		#Write account number, account balance in cents, and the account name 
 		for acct in accts:
-			bal = str(dict_of_accounts[acct][0])
-			name = dict_of_accounts[acct][1]
-			line = acct + " " + bal + " " + name
+                        try:
+                                bal = str(dict_of_accounts[acct][0])
+                                name = dict_of_accounts[acct][1]
+                                line = acct + " " + bal + " " + name
 
 			# Error if the line is longer than 47 charachters - 30 for name - 7 for acct num - 8 for bal
 			if len(line) > 47:
-				#THROW ERROR OR LOG?
-				pass
-			new_master_acct_txt += line + "\n\n"
+				#REDUNDANT?
+                                raise InvalidFieldFatalError("Line length greater than 47") 
+				
+			new_master_acct_txt += line + "\n"
+			except e as InvalidFieldFatalError:
+                                print("Invalid Field")
+                                exit(1)
 
 		write_file(filename, new_master_acct_txt)
 		return
@@ -104,6 +123,7 @@ class QBasicBackEnd():
 
 	def withdraw(self, account, amt):
 		#can't over withdraw
+                
 		pass
 
 	def deposit(self, account, amt):
