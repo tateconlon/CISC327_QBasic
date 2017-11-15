@@ -266,22 +266,6 @@ class QBasicBackEnd():
         return -1
 
 
-    #reads in OldMasterAccountsFile - accounts with #, balance and names
-    #If Master Accounts File is malformed, abort
-    #applies transactions from merged transaction summary file:
-    #if a *constraint* is violated, then you skip the line (causes a negative balance, account already exists, attempting to delete account with money in it)
-    #Need to validate the transaction summary lines: if a transaction is malformed it should abort and quit entirely
-
-# dictionary_of_accounts = {accountNumber : (balance, name)}
-# dictionary['1234567'] = (1234, "fuck")
-
-
-#SORTING PSEUDO
-#list_of_account_nums = dict.keys()
-#list_of_account_nums.sort()
-#for each num in sortedListNums: write dict[num]
-
-
 def str_split(s, numFields):
     '''
     splits for the first < numfields on a space then slots the rest into the final field. This is to resolve the issue
@@ -319,6 +303,9 @@ def str_split(s, numFields):
     return ret_list
 
 def qbasic_backend_parse_args():
+    '''
+    Validates and parses the command line arguments and returns a dictionary containing them
+    '''
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("old_MA_file",
                             help="old master accounts filename",
@@ -338,14 +325,16 @@ def qbasic_backend_parse_args():
     return args
 
 def read_file(filename):
+    '''Reads a file into a list of lines and returns them
+    '''
     with open(filename, "r") as f:
         return f.readlines()
 
-def write_file(filename, lines):    
+def write_file(filename, lines): 
+    '''Writes a list of lines to a file
+    '''   
     with open(filename, "w") as f:
         f.writelines(lines)
-
-
 
 def main():
     cmd_args = qbasic_backend_parse_args()
