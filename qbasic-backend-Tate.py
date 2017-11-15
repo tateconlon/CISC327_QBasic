@@ -27,7 +27,7 @@ class QBasicBackEnd():
 			if len(line) > MAX_MSTER_ACCOUNTS_LINE_LENGTH:
 				raise QBasicBackEndException("Master Account File {0} error. Line longer than {1} chars | line: {2}".format(filename, self.MAX_MSTER_ACCOUNTS_LINE_LENGTH, line_num))
 
-			fields = line.split()
+			fields = str_split(line, 3)
 			if len(fields) != 3:
 				raise QBasicBackEndException("Master Accounts File has invalid line | line: {0}".format(line_num))
 
@@ -66,19 +66,33 @@ class QBasicBackEnd():
 		return ret_dict_of_accounts
 
 
+	def validate_fields(self, trans_code=None, account1=None, account2=None, name=None, amtStr=None):
+		if trans_code != None:
+			if not is_valid_trans_code(trans_code):
+				return False
+		if account1 != None:
+			if not is_account_valid(account1):
+				return False
+		if account2 != None:
+			if not is_account_valid(account2):
+				return False:
+		if name != None:
+			if not is_name_valid(name):
+				return False
+		if amtStr != None:
+			if not is_str_amount_valid(amtStr):
+				return False
+		return True
+
+
+
+
 #NEW 1234567 234 0000000 
 
-	def str_split(self, s, numFields):
-		'''
-		'''
-		ret_list = []
-		i = 0
-		space_count = 0
-		for char in s:
-			if char == " ":
-				space_count++
-			if space_count != 
-			ret_list[i] += char
+
+
+
+
 
 	def run(self, filenames):
 
@@ -137,9 +151,23 @@ class QBasicBackEnd():
 		return len(accountStr) == 7 and accountStr.isdigit() and accountStr[0] != "0"
 
 	def is_balance_valid(self, balance):
+		'''Takes in balance as an int'''
 		if balance < 0 or balance >= 100000000: #cannot be greater than 8 digits or less than 0
 			return False
 		return True
+
+	def is_valid_trans_code(self, trans_code):
+		return trans_code not in ["DEP", "WDR", "XFR", "NEW", "DEL"]
+
+	def is_str_amount_valid(self, amtStr):
+		'''Takes in an amount in string form and returns if it is valid to be found in the master account or transaction summary file'''
+		if len(amtStr) < 3:
+			return False
+		try:
+			amt = int(amtStr)
+		except ValueError:
+			return False
+		return is_balance_valid(amt)
 
 
 	#reads in OldMasterAccountsFile - accounts with #, balance and names
@@ -159,6 +187,39 @@ class QBasicBackEnd():
 	pass
 
 
+def str_split(s, numFields):
+	'''
+	splits for the first < numfields on a space then slots the rest into the final field. This is to resolve the issue
+	of spliting a string into fields, when the accountName field can have spaces in it. This also resolves the issue
+	with having multiple spaces between fields which .split cannot catch. Errors if string starts with a space
+	@returns empty list if there is an error
+	'''
+	if s.startswith(" "):
+		return []
+	ret_list = []
+	i = 0
+	space_count = 0
+	temp = ""
+	for j, char in enumerate(s):
+		if char == " ":
+			if space_count > 0:
+				return []
+			else:
+				ret_list.append(temp)
+				i += 1
+				space_count = 1
+				temp = ""
+				if i == numFields - 1:
+					break
+		else:
+			space_count = 0
+			temp += char
+
+	j +=1
+	rest = s[j:]
+	ret_list.append(rest)
+
+	return ret_list
 
 def qbasic_backend_parse_args():
 	arg_parser = argparse.ArgumentParser()
@@ -190,8 +251,10 @@ def write_file(filename, lines):
 
 
 def main():
-	cmd_args = qbasic_backend_parse_args()
-	print(QBasicBackEnd().read_master_accounts_file(cmd_args["OldMasterAccountsFile"]))
+	#cmd_args = qbasic_backend_parse_args()
+	#print(QBasicBackEnd().read_master_accounts_file(cmd_args["OldMasterAccountsFile"]))
+	print(str_split("Hi My Name Is ",5))
+	print(str_split(" This has spaces     ", 4))
 
 if __name__ == "__main__":
 	main()
