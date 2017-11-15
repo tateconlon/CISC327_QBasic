@@ -54,26 +54,26 @@ class QBasicBackEnd():
 
             #line length checking
             if len(line) > self.MAX_MSTER_ACCOUNTS_LINE_LENGTH:
-                raise QBasicBackEndException("Master Account File {0} error. Line longer than {1} chars | line: {2}".format(filename, self.MAX_MSTER_ACCOUNTS_LINE_LENGTH, line_num))
+                return -1 #TODO: error handling #raise QBasicBackEndException("Master Account File {0} error. Line longer than {1} chars | line: {2}".format(filename, self.MAX_MSTER_ACCOUNTS_LINE_LENGTH, line_num))
 
             fields = str_split(line, 3)
             if len(fields) != 3:
-                raise QBasicBackEndException("Master Accounts File has invalid line {0} | line #{1}".format(line, line_num))
+                return -1 #TODOL error handling raise QBasicBackEndException("Master Accounts File has invalid line {0} | line #{1}".format(line, line_num))
 
             account_num, balance, name = fields
 
             #check ascending order
             if account_num < past_account_num:
-                raise QBasicBackEndException("Master Account File {0} error. Account numbers {1} & {2} are not in ascending order | line: {3}".format(filename, account_num, past_account_num, line_num))
+                return -1 #TODO: error handling #raise QBasicBackEndException("Master Account File {0} error. Account numbers {1} & {2} are not in ascending order | line: {3}".format(filename, account_num, past_account_num, line_num))
             past_account_num = account_num
 
             #Account number: no duplicates, no invalid account numbers
             if account_num in ret_dict_of_accounts:
-                raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
+                return -1 #TODO: error handling raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
 
             error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance, name=name)
             if error_fields != []:
-                raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
+                return -1 #TODO: error handling raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
 
             ret_dict_of_accounts[account_num] = (balanceAmt, name)
 
@@ -90,10 +90,10 @@ class QBasicBackEnd():
             if not self.is_account_valid(account1):
                 ret_error_fields.append("account1")
         if account2 != None:
-            if not self.is_account_valid(account2):
+            if not self.is_account_valid(account2) and account2 != "0000000": #TODO: is_account_valid is false for 0000000 but it is a valid filed
                 ret_error_fields.append("account2")
         if name != None:
-            if not self.is_name_valid(name):
+            if (not self.is_name_valid(name)) and name != "***": #TODO: name validation does not include *** as it's not valid name, but it is valid field
                 ret_error_fields.append("name")
         if amtStr != None:
             intAmt = self.is_str_amount_valid(amtStr)
@@ -107,9 +107,8 @@ class QBasicBackEnd():
         parsedMTSF = []
         seenEOS = False
         for line in MTSFLines:
-
             if seenEOS:     #Last line should have been EOS, if still in loop and has seen EOS, file error
-                pass #TODO: error handling
+                return -1 #TODO: error handling
 
             if line == "EOS" and not seenEOS: #first time seeing EOS should be the end
                 seenEOS = True
@@ -117,27 +116,33 @@ class QBasicBackEnd():
 
             fields = str_split(line, 5)
             if len(fields) != 5:
-                raise InvalidFieldFatalError("Merged Transaction Summary File has an invalid line")
+                return -1 #TODO: error handling raise InvalidFieldFatalError("Merged Transaction Summary File has an invalid line")
             
             trans_code, account1, amtStr, account2, name = fields
             error_fields, amt = self.validate_fields(trans_code=trans_code, account1=account1, amtStr=amtStr, account2=account2, name=name)
             if error_fields != []:
-                pass #TODO: error handling
+                print(error_fields)
+                return -1 #TODO: error handling
 
             #TODO: parsing for valid fields for specific transactions in transaction summary file (eg. deposit must have 0000000 and *** as account2 and name)
             parsedMTSF.append({"trans_code": trans_code, "account1":account1, "amt":amt, "account2":account2, "name":name})
 
         if not seenEOS:
-            pass #TODO: Error handling. EOS not seen in transaction summary file
+            return -1 #TODO: error handling
         return parsedMTSF
 
 
     #param - MTSF Merged Transation Summary File, oldMAF old Master Accounts File, newMAF new Master Accounts File, newVAF new Valid Accounts File"""
     def run(self, oldMAF, MTSF, newMAF,newVAF):
         self.dict_of_accounts = self.read_master_accounts_file(oldMAF)
-
+        if self.dict_of_accounts == -1:
+            print("Invalid Master Accounts File. Abort.")
+            return
         
         transaction_list = self.read_merged_transaction_summary_file(MTSF)
+        if transaction_list == -1:
+            print("Invalid Transaction Summary File. Abort.")
+            return
 
         for trans in transaction_list:
             code = trans["trans_code"]
@@ -245,7 +250,7 @@ class QBasicBackEnd():
         return True
 
     def is_valid_trans_code(self, trans_code):
-        return trans_code not in ["DEP", "WDR", "XFR", "NEW", "DEL"]
+        return trans_code in ["DEP", "WDR", "XFR", "NEW", "DEL"]
 
     def is_str_amount_valid(self, amtStr):
         '''Takes in an amount in string form and returns amount in intergerif it is valid to be found in the master account or transaction summary file.
