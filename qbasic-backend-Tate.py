@@ -42,24 +42,8 @@ class QBasicBackEnd():
 			if account_num in ret_dict_of_accounts:
 				raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
 			
-			if not self.isAccountValid(account_num):
-				raise QBasicBackEndException("Master Account File {0} error. Contains invalid account number {1} | line: {2}".format(filename, account_num, line_num))
-
-			#Balance: padded to 3 spots, valid integer, valid Account balance
-			if len(balance) < 3:
-				raise QBasicBackEndException('Master Account File {0} error. {1} for balance is not padded to 3 spots | line: {2}'.format(filename, balance, line_num))
-
-			try:
-				balanceAmt = int(balance)
-			except ValueError:
-				raise QBasicBackEndException('Master Account File {0} error. {1} for balance is not a valid integer | line: {2}'.format(filename, balanceAmt, line_num))
-
-			if not is_balance_valid(balanceAmt):
-				raise QBasicBackEndException("Master Account File {0} error. Account {1} contains invalid balance {2} | line: {3}".format(filename, account_num, balanceAmt, line_num))
-
-			#Name: Valid name
-			if not self.isNameValid(name):
-				raise QBasicBackEndException("Master Account File {0} error. Account number {1} has invalid name {2} | line: {3}".format(filename, account_num, name, line_num))
+			if not self.validate_fields(account1=account_num, amtStr=balance, name=name):
+				raise QBasicBackEndException("Master Account File {0} error. Invalid field at line: {2}".format(filename, account_num, line_num))
 
 			ret_dict_of_accounts[account_num] = (balanceAmt, name)
 
@@ -151,22 +135,28 @@ class QBasicBackEnd():
 		return len(accountStr) == 7 and accountStr.isdigit() and accountStr[0] != "0"
 
 	def is_balance_valid(self, balance):
-		'''Takes in balance as an int'''
-		if balance < 0 or balance >= 100000000: #cannot be greater than 8 digits or less than 0
-			return False
-		return True
+		'''Takes in balance as an int. Cannot be greater than 8 digits or less than 0
+		Returns an empty string if valid'''
+		if balance < 0:
+			return "Balance {0} is under 0".format(balance)
+		if balance >= 100000000: 
+			return "Balance {0} has more than 8 digits".format(balance)
+		return ""
 
 	def is_valid_trans_code(self, trans_code):
-		return trans_code not in ["DEP", "WDR", "XFR", "NEW", "DEL"]
+		'''Returns empty string if valid. Returns error message if not in ["DEP", "WDR", "XFR", "NEW", "DEL"]'''
+		if trans_code not in ["DEP", "WDR", "XFR", "NEW", "DEL"]:
+			return "transaction code {0} not in [DEP, WDR, XFR, NEW, DEL]".format(trans_code)
+		return ""
 
 	def is_str_amount_valid(self, amtStr):
-		'''Takes in an amount in string form and returns if it is valid to be found in the master account or transaction summary file'''
+		'''Takes in an amount in string form and returns empty string if it is valid to be found in the master account or transaction summary file'''
 		if len(amtStr) < 3:
-			return False
+			return "amount string {0} is not padded to at least 3 digits".format(amtStr)
 		try:
 			amt = int(amtStr)
 		except ValueError:
-			return False
+			return "Amount {0} is not a string".format(amtStr)
 		return is_balance_valid(amt)
 
 
