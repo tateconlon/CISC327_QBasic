@@ -229,6 +229,12 @@ class QBasicBackEnd():
 
         self.dict_of_accounts.pop(account)
 
+    def valid_balance_chg(self, account, val):
+        """Returns tue if account's balance can be increased by val."""
+        new_balance = self.dict_of_accounts[account][0] + val
+        return self.is_balance_valid(new_balance)
+
+
     def is_name_valid(self, nameStr):
         '''Checks if name is between 3-30 characters, [A-Z][a-z][0-9] without leading/trailing spaces'''
         if(len(nameStr) < 3 or len(nameStr) > 30 or nameStr[0].isspace() or nameStr[-1].isspace()):

@@ -243,7 +243,7 @@ class QBasicBackEnd():
 
 
     def valid_balance_chg(self, account, val):
-        """change the balance of the account in the parameter by the val param"""
+        """Returns tue if account's balance can be increased by val."""
         new_balance = self.dict_of_accounts[account][0] + val
         return self.is_balance_valid(new_balance)
 
