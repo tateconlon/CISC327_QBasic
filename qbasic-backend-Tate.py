@@ -1,48 +1,13 @@
 import argparse
 
-class QBasicBackEndException(Exception):
-        """Base class for all other exceptions specific to the QBasic Back End"""
-        def __init__(self,*args,**kwargs):
-                Exception.__init__(self,*args,**kwargs)
-
-class NonZeroBalanceError(QBasicBackEndException):
-        """no account should ever have a negative balance"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class NegativeBalanceError(QBasicBackEndException):
-        """a deleted account must have a zero balance"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class AccountNumberInUseError(QBasicBackEndException):
-        """a created account must have a new, unused account number"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class NameMismatchError(QBasicBackEndException):
-        """the name given in a delete transaction must match the name associated with the deleted account"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class InvalidFieldFatalError(QBasicBackEndException):
-        """Back End encounters an invalid field, it should immediately stop and log a fatal error on the terminal"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-
-
-
 class QBasicBackEnd():
 
-    dict_of_accounts = {} #key = str(accountName): val = (int(balance), str(name))
+    dict_of_accounts = {} #key = str(accountName): val = [int(balance), str(name)]
     MAX_MSTER_ACCOUNTS_LINE_LENGTH = 47
 
     def read_master_accounts_file(self, filename):
         ''' Read Master Accounts File and parse it into accounts with a balance and name.
-
         Returns a dictionary in the form of {str(account): [int(balance, str(name)])}
-
         '''
         lines = read_file(filename)
 
@@ -60,7 +25,7 @@ class QBasicBackEnd():
 
             fields = str_split(line, 3)
             if len(fields) != 3:
-                return -1 #%error handling raise QBasicBackEndException("Master Accounts File has invalid line {0} | line #{1}".format(line, line_num))
+                return -1 
 
             account_num, balance, name = fields
 
@@ -71,11 +36,11 @@ class QBasicBackEnd():
 
             #Account number: no duplicates, no invalid account numbers
             if account_num in ret_dict_of_accounts:
-                return -1 #% error handling raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
+                return -1
 
             error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance) #% *** would return valid when it's not
             if error_fields != []:
-                return -1 #% error handling raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
+                return -1
 
             if not self.is_name_valid(name): #must check for a valid account name
                 return -1 #% error handling
@@ -276,7 +241,7 @@ class QBasicBackEnd():
         return True
 
     def is_valid_trans_code(self, trans_code):
-        '''Returns True if tran_code is a valid transaction code (["DEP", "WDR", "XFR", "NEW", "DEL"])
+        '''Returns True if tran_code is a valid transaction code (["DEP", "WDR", "XFR", "NEW", "DEL"])'''
         return trans_code in ["DEP", "WDR", "XFR", "NEW", "DEL"]
 
     def is_amt_field_valid(self, amtStr):

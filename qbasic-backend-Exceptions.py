@@ -1,94 +1,59 @@
 import argparse
 
-class QBasicBackEndException(Exception):
-        """Base class for all other exceptions specific to the QBasic Back End"""
-        def __init__(self,*args,**kwargs):
-                Exception.__init__(self,*args,**kwargs)
-
-class NonZeroBalanceError(QBasicBackEndException):
-        """no account should ever have a negative balance"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class NegativeBalanceError(QBasicBackEndException):
-        """a deleted account must have a zero balance"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class AccountNumberInUseError(QBasicBackEndException):
-        """a created account must have a new, unused account number"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class NameMismatchError(QBasicBackEndException):
-        """the name given in a delete transaction must match the name associated with the deleted account"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-class InvalidFieldFatalError(QBasicBackEndException):
-        """Back End encounters an invalid field, it should immediately stop and log a fatal error on the terminal"""
-        def __init__(self,*args,**kwargs):
-                QBasicBackEndException.__init__(self,*args,**kwargs)
-
-
-
-
 class QBasicBackEnd():
 
     dict_of_accounts = {} #key = str(accountName): val = (int(balance), str(name))
-    MAX_MSTER_ACCOUNTS_LINE_LENGTH = 47
+    MAX_MASTER_ACCOUNTS_LINE_LENGTH = 47
 
     def read_master_accounts_file(self, filename):
         ''' Read Master Accounts File and parse it into accounts with a balance and name.
-
-        Returns a dictionary in the form of {str(account): [int(balance, str(name)])}
-
+        @returns a dictionary in the form of {str(account): [int(balance, str(name)])}
         '''
         lines = read_file(filename)
 
         ret_dict_of_accounts = {} #empty dict_of_accounts
-
         past_account_num = ""
 
         for line_num, line in enumerate(lines):
-
             line_num = line_num + 1 #line_num starts at 0
 
             #line length checking
-            if len(line) > self.MAX_MSTER_ACCOUNTS_LINE_LENGTH:
-                return -1 #% error handling #raise QBasicBackEndException("Master Account File {0} error. Line longer than {1} chars | line: {2}".format(filename, self.MAX_MSTER_ACCOUNTS_LINE_LENGTH, line_num))
+            if len(line) > self.MAX_MASTER_ACCOUNTS_LINE_LENGTH:
+                return -1
 
             fields = str_split(line, 3)
-            if len(fields) != 3:
-                return -1 #%error handling raise QBasicBackEndException("Master Accounts File has invalid line {0} | line #{1}".format(line, line_num))
+            if len(fields) != 3:    #incorect number of fields
+                return -1
 
             account_num, balance, name = fields
 
             #check ascending order
             if account_num < past_account_num:
-                return -1 #%error handling #raise QBasicBackEndException("Master Account File {0} error. Account numbers {1} & {2} are not in ascending order | line: {3}".format(filename, account_num, past_account_num, line_num))
+                return -1
+
             past_account_num = account_num
 
             #Account number: no duplicates, no invalid account numbers
             if account_num in ret_dict_of_accounts:
-                return -1 #% error handling raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
+                return -1 
 
-            error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance) #% *** would return valid when it's not
+            error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance) #exclude name as *** would return as valid when it's not
             if error_fields != []:
-                return -1 #% error handling raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
+                return -1 
 
             if not self.is_name_valid(name): #must check for a valid account name
-                return -1 #% error handling
+                return -1 
 
             ret_dict_of_accounts[account_num] = [balanceAmt, name]
 
         return ret_dict_of_accounts
 
 
+
     def validate_fields(self, trans_code=None, account1=None, account2=None, name=None, amtStr=None):
         '''
         Validates fields as they would appear in the transaction summaryy file and (mostly) in the Master Accounts file.
-        Cannot 
+        Cannot validate name for master accounts here as in the master accounts file *** is not a valid name
         '''
         ret_error_fields = []
         intAmt = -1
