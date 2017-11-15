@@ -4,36 +4,32 @@ class QBasicBackEndException(Exception):
         """Base class for all other exceptions specific to the QBasic Back End"""
         def __init__(self,*args,**kwargs):
                 Exception.__init__(self,*args,**kwargs)
-    pass
 
 class NonZeroBalanceError(QBasicBackEndException):
         """no account should ever have a negative balance"""
         def __init__(self,*args,**kwargs):
                 QBasicBackEndException.__init__(self,*args,**kwargs)
-        pass
 
 class NegativeBalanceError(QBasicBackEndException):
         """a deleted account must have a zero balance"""
         def __init__(self,*args,**kwargs):
                 QBasicBackEndException.__init__(self,*args,**kwargs)
-        pass
 
 class AccountNumberInUseError(QBasicBackEndException):
         """a created account must have a new, unused account number"""
         def __init__(self,*args,**kwargs):
                 QBasicBackEndException.__init__(self,*args,**kwargs)
-        pass
 
 class NameMismatchError(QBasicBackEndException):
         """the name given in a delete transaction must match the name associated with the deleted account"""
         def __init__(self,*args,**kwargs):
                 QBasicBackEndException.__init__(self,*args,**kwargs)
-        pass
 
 class InvalidFieldFatalError(QBasicBackEndException):
         """Back End encounters an invalid field, it should immediately stop and log a fatal error on the terminal"""
         def __init__(self,*args,**kwargs):
                 QBasicBackEndException.__init__(self,*args,**kwargs)
+
 
 
 
@@ -57,7 +53,7 @@ class QBasicBackEnd():
             line_num = line_num + 1 #line_num starts at 0
 
             #line length checking
-            if len(line) > MAX_MSTER_ACCOUNTS_LINE_LENGTH:
+            if len(line) > self.MAX_MSTER_ACCOUNTS_LINE_LENGTH:
                 raise QBasicBackEndException("Master Account File {0} error. Line longer than {1} chars | line: {2}".format(filename, self.MAX_MSTER_ACCOUNTS_LINE_LENGTH, line_num))
 
             fields = str_split(line, 3)
@@ -75,8 +71,10 @@ class QBasicBackEnd():
             if account_num in ret_dict_of_accounts:
                 raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
             
+            print("\"" + balance + "\"")
+
             error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance, name=name)
-            if error_fields != []
+            if error_fields != []:
                 raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
 
             ret_dict_of_accounts[account_num] = (balanceAmt, name)
@@ -88,20 +86,20 @@ class QBasicBackEnd():
         ret_error_fields = []
         intAmt = -1
         if trans_code != None:
-            if not is_valid_trans_code(trans_code):
+            if not self.is_valid_trans_code(trans_code):
                 ret_error_fields.append("trans_code")
         if account1 != None:
-            if not is_account_valid(account1):
+            if not self.is_account_valid(account1):
                 ret_error_fields.append("account1")
         if account2 != None:
-            if not is_account_valid(account2):
+            if not self.is_account_valid(account2):
                 ret_error_fields.append("account2")
         if name != None:
-            if not is_name_valid(name):
+            if not self.is_name_valid(name):
                 ret_error_fields.append("name")
         if amtStr != None:
-            intAmt = is_str_amount_valid(amtStr)
-            if intAmt != -1:
+            intAmt = self.is_str_amount_valid(amtStr)
+            if intAmt == -1:
                 ret_error_fields.append("amtStr")
         return (ret_error_fields, intAmt)
 
@@ -136,10 +134,13 @@ class QBasicBackEnd():
         return parsedMTSF
 
 
-            """param - MTSF Merged Transation Summary File, oldMAF old Master Accounts File, newMAF new Master Accounts File, newVAF new Valid Accounts File"""
-    def run(self, MTSF,oldMAF,newMAF,newVAF):
-        self.dict_of_accounts = read_master_accounts_file(oldMAF)
-        transaction_list = read_merged_transaction_summary_file(MTSF)
+    #param - MTSF Merged Transation Summary File, oldMAF old Master Accounts File, newMAF new Master Accounts File, newVAF new Valid Accounts File"""
+    def run(self, oldMAF, MTSF, newMAF,newVAF):
+        self.dict_of_accounts = self.read_master_accounts_file(oldMAF)
+
+        self.write_valid_accounts(newVAF)
+        
+        transaction_list = self.read_merged_transaction_summary_file(MTSF)
 
         for trans in transaction_list:
             code = trans["trans_code"]
@@ -151,7 +152,7 @@ class QBasicBackEnd():
                 self.transfer(trans["account1"], trans["account2"], trans["amt"])
             elif code == "NEW":
                 self.create_acct(trans["account1"], trans["name"])
-            elif code == "DEL"
+            elif code == "DEL":
                 self.delete_acct(trans["account1"], trans["name"])
         try:
             #conditional
@@ -162,10 +163,17 @@ class QBasicBackEnd():
         except e as Exception:
             pass
 
-        
+    def write_valid_accounts(self, filename):
+
+        accts = sorted(list(self.dict_of_accounts.keys()))
+        accts = ["{0}\n".format(x) for x in accts] #add a newline after each
+
+        accts.append("0000000")
+        write_file(filename, accts)
+
 
     def write_master_accounts(self, filename):
-    """write to the new master accounts file"""
+        """write to the new master accounts file"""
 
         #sorts all account numbers
         accts = sorted([acct for acct in self.dict_of_accounts])
@@ -173,20 +181,18 @@ class QBasicBackEnd():
         new_master_acct_txt = ""        
         #Write account number, account balance in cents, and the account name 
         for acct in accts:
-            try:
-                bal = str(dict_of_accounts[acct][0])
-                name = dict_of_accounts[acct][1]
-                line = acct + " " + bal + " " + name
+            bal = str(dict_of_accounts[acct][0])
+            name = dict_of_accounts[acct][1]
+            line = acct + " " + bal + " " + name
             
-            # Error if the line is longer than 47 charachters - 30 for name - 7 for acct num - 8 for bal
+            #Error if the line is longer than 47 charachters - 30 for name - 7 for acct num - 8 for bal
             if len(line) > 47:
                 #REDUNDANT?
                 raise InvalidFieldFatalError("Line length greater than 47") 
-                
+            
             new_master_acct_txt += line + "\n"
 
-        self.write_file(filename, new_master_acct_txt)
-        return
+        write_file(filename, new_master_acct_txt)
 
 
     def transfer(self, accountTo, accountFrom, amount):
@@ -241,7 +247,7 @@ class QBasicBackEnd():
             amt = int(amtStr)
         except ValueError:
             return False
-        if is_balance_valid(amt):
+        if self.is_balance_valid(amt):
             return amt
         return -1
 
@@ -260,7 +266,6 @@ class QBasicBackEnd():
 #list_of_account_nums = dict.keys()
 #list_of_account_nums.sort()
 #for each num in sortedListNums: write dict[num]
-    pass
 
 
 def str_split(s, numFields):
@@ -293,22 +298,24 @@ def str_split(s, numFields):
 
     j +=1
     rest = s[j:]
+    if rest.endswith("\n"):
+        rest = rest[:-1]
     ret_list.append(rest)
 
     return ret_list
 
 def qbasic_backend_parse_args():
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("OldMasterAccountsFile",
-                            help="old master accounts file",
+    arg_parser.add_argument("old_MA_file",
+                            help="old master accounts filename",
                             type=str)
-    arg_parser.add_argument("MergedTransactionSummaryFileName",
+    arg_parser.add_argument("merged_TS_file",
                             help="merged transaction summary filename",
                             type=str)
-    arg_parser.add_argument("NewMasterAccountsFile",
-                            help="new master accounts file",
+    arg_parser.add_argument("new_MA_file",
+                            help="new master accounts filename",
                             type=str)
-    arg_parser.add_argument("NewValidAccountsFileName",
+    arg_parser.add_argument("new_VA_file",
                             help="new valid accounts filename",
                             type=str)
 
@@ -321,16 +328,16 @@ def read_file(filename):
         return f.readlines()
 
 def write_file(filename, lines):    
-        with open(filename, "w") as f:
-            f.writelines(lines)
+    with open(filename, "w") as f:
+        f.writelines(lines)
 
 
 
 def main():
-    #cmd_args = qbasic_backend_parse_args()
-    #print(QBasicBackEnd().read_master_accounts_file(cmd_args["OldMasterAccountsFile"]))
-    print(str_split("Hi My Name Is ",5))
-    print(str_split(" This has spaces     ", 4))
+    cmd_args = qbasic_backend_parse_args()
+    back_end = QBasicBackEnd()
+    back_end.run(cmd_args["old_MA_file"], cmd_args["merged_TS_file"], cmd_args["new_MA_file"], cmd_args["new_VA_file"])
+    
 
 if __name__ == "__main__":
     main()
