@@ -80,13 +80,13 @@ class QBasicBackEnd():
 	"""write to the new master accounts file"""
 
 		#sorts all account numbers
-		accts = sorted([acct for acct in self.dict_of_accounts])
+		accts = sorted([acct for acct in dict_of_accounts])
 
 		new_master_acct_txt = ""		
 		#Write account number, account balance in cents, and the account name 
 		for acct in accts:
-			bal = str(self.dict_of_accounts[acct][0])
-			name = self.dict_of_accounts[acct][1]
+			bal = str(dict_of_accounts[acct][0])
+			name = dict_of_accounts[acct][1]
 			line = acct + " " + bal + " " + name
 
 			# Error if the line is longer than 47 charachters - 30 for name - 7 for acct num - 8 for bal
@@ -95,60 +95,35 @@ class QBasicBackEnd():
 				pass
 			new_master_acct_txt += line + "\n\n"
 
-		self.write_file(filename, new_master_acct_txt)
+		write_file(filename, new_master_acct_txt)
 		return
 
 
 	def transfer(self, accountTo, accountFrom, amount):
-		self.change_balance(accountTo,amt)
-		self.change_balance(accountFrom,-amt)
-		return
+		pass
 
 	def withdraw(self, account, amt):
-		self.change_balance(account,amt)
-		return
+		#can't over withdraw
+		pass
 
 	def deposit(self, account, amt):
-		self.change_balance(account,amt)
-		return
+		pass
 
 	def create_acct(self, account, name):
-		"""Create an account with initial balance of 0"""
-		if account in self.dict_of_accounts:
-			# LOG ACCOUNT ALREADY EXISTS
-			pass
-		else:
-			self.dict_of_accounts[account] = (0, name)
+		#account can't exist
 		pass
 
 	def delete_acct(self, account, name):
-		"""Deletes the account if it exists, has a zero balance, and account name matches param"""
-		if account not in self.dict_of_accounts:
-			# LOG ACCOUNT DOES NOT EXIST
-			pass
-		else:
-			if self.dict_of_accounts[account][0] != 0:
-				#LOG Can't delete because not a zero balance
-				pass
-			elif self.dict_of_accounts[account][1] != name:
-				#LOG can't delete because account name doesn't match
-			else:
-				del self.dict_of_accounts[account]
-
-		return
+		#can't delete account with non-zero balance
+		#names have to match
+		#account has to exist
+		pass
 
 
-
-	def change_balance(self, account, val):
-	    """change the balance of the account in the parameter by the val param"""
-	    new_balance = self.dict_of_accounts[account][0] + val
-
-	    # CHECK THE BALANCE IS LEGAL 
-
-	    # IF SO THEN MAKE THE CHANGE 
-		self.dict_of_accounts[account][0] += val
-		return
-		
+	def change_balance(account, val)
+	"""change the balance of the account ins the parameter by the val param"""
+	
+		pass
 
 
 	#reads in OldMasterAccountsFile - accounts with #, balance and names
