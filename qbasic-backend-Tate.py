@@ -70,8 +70,6 @@ class QBasicBackEnd():
             #Account number: no duplicates, no invalid account numbers
             if account_num in ret_dict_of_accounts:
                 raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
-            
-            print("\"" + balance + "\"")
 
             error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance, name=name)
             if error_fields != []:
@@ -122,7 +120,7 @@ class QBasicBackEnd():
                 raise InvalidFieldFatalError("Merged Transaction Summary File has an invalid line")
             
             trans_code, account1, amtStr, account2, name = fields
-            error_fields, amt = validate_fields(trans_code=trans_code, account1=account1, amtStr=amtStr, account2=account2, name=name)
+            error_fields, amt = self.validate_fields(trans_code=trans_code, account1=account1, amtStr=amtStr, account2=account2, name=name)
             if error_fields != []:
                 pass #TODO: error handling
 
