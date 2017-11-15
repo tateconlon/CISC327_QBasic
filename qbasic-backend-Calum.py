@@ -136,7 +136,6 @@ class QBasicBackEnd():
     def run(self, oldMAF, MTSF, newMAF,newVAF):
         self.dict_of_accounts = self.read_master_accounts_file(oldMAF)
 
-        self.write_valid_accounts(newVAF)
         
         transaction_list = self.read_merged_transaction_summary_file(MTSF)
 
@@ -152,14 +151,9 @@ class QBasicBackEnd():
                 self.create_acct(trans["account1"], trans["name"])
             elif code == "DEL":
                 self.delete_acct(trans["account1"], trans["name"])
-        try:
-            #conditional
-            #raise specific QBasicBackEndException
-            pass
-        except e as QBasicBackEndException:
-            pass
-        except e as Exception:
-            pass
+
+        self.write_valid_accounts(newVAF)
+        self.write_master_accounts(newMAF)
 
     def write_valid_accounts(self, filename):
 
@@ -179,8 +173,8 @@ class QBasicBackEnd():
         new_master_acct_txt = ""        
         #Write account number, account balance in cents, and the account name 
         for acct in accts:
-            bal = str(dict_of_accounts[acct][0])
-            name = dict_of_accounts[acct][1]
+            bal = str(self.dict_of_accounts[acct][0])
+            name = self.dict_of_accounts[acct][1]
             line = acct + " " + bal + " " + name
             
             #Error if the line is longer than 47 charachters - 30 for name - 7 for acct num - 8 for bal
@@ -205,13 +199,30 @@ class QBasicBackEnd():
 
     def create_acct(self, account, name):
         #account can't exist
-        pass
+        if account in self.dict_of_accounts:
+            print("Cannot create new account {0} as it already exists".format(account))
+            return
+
+        self.dict_of_accounts[account] = (0, name)
 
     def delete_acct(self, account, name):
         #can't delete account with non-zero balance
         #names have to match
         #account has to exist
-        pass
+        if account not in self.dict_of_accounts:
+            print("Cannot delete account {0}, it does not exist".format(account))
+            return
+
+        acct_bal = self.dict_of_accounts[account][0]
+        if acct_bal != 0:
+            print("Cannot delete account {0} with non-zero balance {1}".format(account, acct_bal))
+            return
+
+        acct_name = self.dict_of_accounts[account][1]
+        if acct_name != name:
+            print("Cannot delete account {a} {n} as supplied name {n2} does not match".format(a=account, n=acct_name, n2=name))
+
+        self.dict_of_accounts.pop(account)
 
     def is_name_valid(self, nameStr):
         '''Checks if name is between 3-30 characters, [A-Z][a-z][0-9] without leading/trailing spaces'''
