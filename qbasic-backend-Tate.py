@@ -39,6 +39,11 @@ class QBasicBackEnd():
     MAX_MSTER_ACCOUNTS_LINE_LENGTH = 47
 
     def read_master_accounts_file(self, filename):
+        ''' Read Master Accounts File and parse it into accounts with a balance and name.
+
+        Returns a dictionary in the form of {str(account): [int(balance, str(name)])}
+
+        '''
         lines = read_file(filename)
 
         ret_dict_of_accounts = {} #empty dict_of_accounts
@@ -47,40 +52,44 @@ class QBasicBackEnd():
 
         for line_num, line in enumerate(lines):
 
-            if(line[0] == "#"): #TODO: only for testing, delete this
-                continue
-
             line_num = line_num + 1 #line_num starts at 0
 
             #line length checking
             if len(line) > self.MAX_MSTER_ACCOUNTS_LINE_LENGTH:
-                return -1 #TODO: error handling #raise QBasicBackEndException("Master Account File {0} error. Line longer than {1} chars | line: {2}".format(filename, self.MAX_MSTER_ACCOUNTS_LINE_LENGTH, line_num))
+                return -1 #% error handling #raise QBasicBackEndException("Master Account File {0} error. Line longer than {1} chars | line: {2}".format(filename, self.MAX_MSTER_ACCOUNTS_LINE_LENGTH, line_num))
 
             fields = str_split(line, 3)
             if len(fields) != 3:
-                return -1 #TODOL error handling raise QBasicBackEndException("Master Accounts File has invalid line {0} | line #{1}".format(line, line_num))
+                return -1 #%error handling raise QBasicBackEndException("Master Accounts File has invalid line {0} | line #{1}".format(line, line_num))
 
             account_num, balance, name = fields
 
             #check ascending order
             if account_num < past_account_num:
-                return -1 #TODO: error handling #raise QBasicBackEndException("Master Account File {0} error. Account numbers {1} & {2} are not in ascending order | line: {3}".format(filename, account_num, past_account_num, line_num))
+                return -1 #%error handling #raise QBasicBackEndException("Master Account File {0} error. Account numbers {1} & {2} are not in ascending order | line: {3}".format(filename, account_num, past_account_num, line_num))
             past_account_num = account_num
 
             #Account number: no duplicates, no invalid account numbers
             if account_num in ret_dict_of_accounts:
-                return -1 #TODO: error handling raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
+                return -1 #% error handling raise QBasicBackEndException("Master Account File {0} error. Defines two accounts with same account number {1} | line: {2}".format(filename, account_num, line_num))
 
-            error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance, name=name)
+            error_fields, balanceAmt = self.validate_fields(account1=account_num, amtStr=balance) #% *** would return valid when it's not
             if error_fields != []:
-                return -1 #TODO: error handling raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
+                return -1 #% error handling raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
 
-            ret_dict_of_accounts[account_num] = (balanceAmt, name)
+            if not self.is_name_valid(name): #must check for a valid account name
+                return -1 #% error handling
+
+            ret_dict_of_accounts[account_num] = [balanceAmt, name]
 
         return ret_dict_of_accounts
 
 
     def validate_fields(self, trans_code=None, account1=None, account2=None, name=None, amtStr=None):
+        '''
+        Validates fields as they would appear in the transaction summaryy file and (mostly) in the Master Accounts file.
+        Cannot 
+        '''
         ret_error_fields = []
         intAmt = -1
         if trans_code != None:
@@ -134,7 +143,8 @@ class QBasicBackEnd():
 
 
     def run(self, oldMAF, MTSF, newMAF,newVAF):
-        ''' Runs the qBasicBackEnd.
+        ''' Runs the qBasicBackEnd by parsing oldMaster Acconunts File, merged transaction summary file
+
 
         Parameters: 
         oldMAF -old Master Accounts Filename 
@@ -142,10 +152,12 @@ class QBasicBackEnd():
         newMAF - new Master Accounts Filename
         newVAF - new Valid Accounts Filename
         '''
-        self.dict_of_accounts = self.read_master_accounts_file(oldMAF)
-        if self.dict_of_accounts == -1:
+        retVal = self.read_master_accounts_file(oldMAF)
+        if retVal == -1:
             print("Invalid Master Accounts File. Abort.")
             return
+
+        retVal = self.dict_of_accounts
         
         transaction_list = self.read_merged_transaction_summary_file(MTSF)
         if transaction_list == -1:
@@ -176,9 +188,8 @@ class QBasicBackEnd():
         accts.append("0000000")
         write_file(filename, accts)
 
-
     def write_master_accounts(self, filename):
-        """write to the new master accounts file to filename using self.dict_of_accounts"""
+        '''Write to the new master accounts file to filename using self.dict_of_accounts'''
 
         #sorts all account numbers
         accts = sorted([acct for acct in self.dict_of_accounts])
@@ -199,7 +210,6 @@ class QBasicBackEnd():
 
         write_file(filename, new_master_acct_txt)
 
-
     def transfer(self, accountTo, accountFrom, amount):
         pass
 
@@ -213,12 +223,12 @@ class QBasicBackEnd():
     def create_acct(self, account, name):
         '''If account doesn't exist, creates an account and adds it to self.dict_of_accounts. 
         Assumes entered name is a valid name'''
-        #account can't exist
+        #account can't already exist
         if account in self.dict_of_accounts:
             print("Cannot create new account {0} as it already exists".format(account))
             return
 
-        self.dict_of_accounts[account] = (0, name)
+        self.dict_of_accounts[account] = [0, name]
 
     def delete_acct(self, account, name):
         '''Deletes an account with matching account number and name if it has a non-zero balance'''
@@ -266,10 +276,12 @@ class QBasicBackEnd():
         return True
 
     def is_valid_trans_code(self, trans_code):
+        '''Returns True if tran_code is a valid transaction code (["DEP", "WDR", "XFR", "NEW", "DEL"])
         return trans_code in ["DEP", "WDR", "XFR", "NEW", "DEL"]
 
     def is_amt_field_valid(self, amtStr):
-        '''Takes in an amount field in string form and returns amount in interger if it valid to be found in the master account or transaction summary file.
+        '''Takes in an amount field in string form and returns amount in interger 
+        if it valid to be found in the master account or transaction summary file.
         Returns -1 if not valid'''
         if len(amtStr) < 3:
             return False
@@ -284,44 +296,43 @@ class QBasicBackEnd():
 
 def str_split(s, numFields):
     '''
-    splits for the first < numfields on a space then slots the rest into the final field. This is to resolve the issue
-    of spliting a string into fields, when the accountName field can have spaces in it. This also resolves the issue
+    splits for the first < numfields on a space then slots the rest into the final field. 
+
+    This is to resolve the issue of spliting a string into fields, when the accountName field can have spaces in it. This also resolves the issue
     with having multiple spaces between fields which .split cannot catch. Errors if string starts with a space
-    @returns empty list if there is an error
+    Returns empty list if there is an error (double spacing or string starts with a space).
     '''
     if s.startswith(" "):
         return []
+
+    #
     ret_list = []
     i = 0
     space_count = 0
-    temp = ""
+    temp = ""   #field we're currently parsing
     for j, char in enumerate(s):
-        if char == " ":
-            if space_count > 0:
+        if char == " ": 
+            if space_count > 0: #If double space, return error
                 return []
             else:
                 ret_list.append(temp)
                 i += 1
                 space_count = 1
                 temp = ""
-                if i == numFields - 1:
+                if i == numFields - 1:  #if we're about to parse the last field, break out of loop
                     break
-        else:
+        else:   #not a space
             space_count = 0
             temp += char
 
-    j +=1
-    rest = s[j:]
-    if rest.endswith("\n"):
-        rest = rest[:-1]
+    j +=1 #go increment past the space character
+    rest = s[j:] #get everything to the end of the line
     ret_list.append(rest)
 
     return ret_list
 
 def qbasic_backend_parse_args():
-    '''
-    Validates and parses the command line arguments and returns a dictionary containing them
-    '''
+    '''Validates and parses the command line arguments and returns a dictionary containing them'''
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("old_MA_file",
                             help="old master accounts filename",
@@ -340,11 +351,13 @@ def qbasic_backend_parse_args():
 
     return args
 
-def read_file(filename):
-    '''Reads a file into a list of lines and returns them
-    '''
+def read_file(filename, keep_newlines=False):
+    '''Reads a file into a list of lines and returns them '''
     with open(filename, "r") as f:
-        return f.readlines()
+        if keep_newlines:
+            return f.readlines()
+        else:
+            return [x.rstrip("\n") for x in f.readlines()]
 
 def write_file(filename, lines): 
     '''Writes a list of lines to a file
