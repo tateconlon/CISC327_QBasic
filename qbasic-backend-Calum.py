@@ -75,7 +75,7 @@ class QBasicBackEnd():
             if error_fields != []:
                 return -1 #TODO: error handling raise QBasicBackEndException("Master Account File {0} error. Invalid field(s) {fields} in line: {1} | line #{2}".format(filename, line, line_num, fields=", ".join(error_fields)))
 
-            ret_dict_of_accounts[account_num] = (balanceAmt, name)
+            ret_dict_of_accounts[account_num] = [balanceAmt, name]
 
         return ret_dict_of_accounts
 
@@ -179,29 +179,36 @@ class QBasicBackEnd():
         #Write account number, account balance in cents, and the account name 
         for acct in accts:
             bal = str(self.dict_of_accounts[acct][0])
+            while len(bal) < 3:
+                bal = "0" + bal
             name = self.dict_of_accounts[acct][1]
             line = acct + " " + bal + " " + name
-            
-            #Error if the line is longer than 47 charachters - 30 for name - 7 for acct num - 8 for bal
-            if len(line) > 47:
-                #REDUNDANT?
-                raise InvalidFieldFatalError("Line length greater than 47") 
-            
+
             new_master_acct_txt += line + "\n"
 
         write_file(filename, new_master_acct_txt)
 
-    def transfer(self, accountTo, accountFrom, amount):
-        self.change_balance(accountTo,amt)
-        self.change_balance(accountFrom,-amt)
+
+    def transfer(self, accountTo, accountFrom, amt):
+        if self.valid_balance_chg(accountTo,amt) and self.valid_balance_chg(accountFrom,-amt):
+            self.dict_of_accounts[accountTo][0] += amt
+            self.dict_of_accounts[accountFrom][0] -= amt
+        else:
+            print("Transfer Invalid - not enough money in account or account overflow")
         return
 
     def withdraw(self, account, amt):
-        self.change_balance(account,amt)
+        if self.valid_balance_chg(account,-amt):
+            self.dict_of_accounts[account][0] -= amt
+        else:
+            print("Withdraw Invalid - Not ${0} in account".format(amt))
         return
 
     def deposit(self, account, amt):
-        self.change_balance(account,amt)
+        if self.valid_balance_chg(account,amt):
+            self.dict_of_accounts[account][0] += amt
+        else:
+            print("Deposit Invalid - Too much money in account")
         return
 
 
@@ -235,15 +242,10 @@ class QBasicBackEnd():
 
 
 
-    def change_balance(self, account, val):
+    def valid_balance_chg(self, account, val):
         """change the balance of the account in the parameter by the val param"""
         new_balance = self.dict_of_accounts[account][0] + val
-
-        # CHECK THE BALANCE IS LEGAL 
-
-        # IF SO THEN MAKE THE CHANGE 
-        self.dict_of_accounts[account][0] += val
-        return
+        return self.is_balance_valid(new_balance)
 
 
     def is_name_valid(self, nameStr):
