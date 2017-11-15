@@ -90,13 +90,13 @@ class QBasicBackEnd():
             if not self.is_account_valid(account1):
                 ret_error_fields.append("account1")
         if account2 != None:
-            if not self.is_account_valid(account2) and account2 != "0000000": #TODO: is_account_valid is false for 0000000 but it is a valid filed
+            if not self.is_account_valid(account2) and account2 != "0000000": #% is_account_valid is false for 0000000 but it is a valid filed
                 ret_error_fields.append("account2")
         if name != None:
-            if (not self.is_name_valid(name)) and name != "***": #TODO: name validation does not include *** as it's not valid name, but it is valid field
+            if not self.is_name_field_valid(name):
                 ret_error_fields.append("name")
         if amtStr != None:
-            intAmt = self.is_str_amount_valid(amtStr)
+            intAmt = self.is_amt_field_valid(amtStr)
             if intAmt == -1:
                 ret_error_fields.append("amtStr")
         return (ret_error_fields, intAmt)
@@ -108,7 +108,7 @@ class QBasicBackEnd():
         seenEOS = False
         for line in MTSFLines:
             if seenEOS:     #Last line should have been EOS, if still in loop and has seen EOS, file error
-                return -1 #TODO: error handling
+                return -1 #% error handling
 
             if line == "EOS" and not seenEOS: #first time seeing EOS should be the end
                 seenEOS = True
@@ -116,24 +116,32 @@ class QBasicBackEnd():
 
             fields = str_split(line, 5)
             if len(fields) != 5:
-                return -1 #TODO: error handling raise InvalidFieldFatalError("Merged Transaction Summary File has an invalid line")
+                return -1 #% error handling raise InvalidFieldFatalError("Merged Transaction Summary File has an invalid line")
             
             trans_code, account1, amtStr, account2, name = fields
             error_fields, amt = self.validate_fields(trans_code=trans_code, account1=account1, amtStr=amtStr, account2=account2, name=name)
             if error_fields != []:
                 print(error_fields)
-                return -1 #TODO: error handling
+                return -1 #% error handling
 
-            #TODO: parsing for valid fields for specific transactions in transaction summary file (eg. deposit must have 0000000 and *** as account2 and name)
+            #% parsing for valid fields for specific transactions in transaction summary file (eg. deposit must have 0000000 and *** as account2 and name)
             parsedMTSF.append({"trans_code": trans_code, "account1":account1, "amt":amt, "account2":account2, "name":name})
 
         if not seenEOS:
-            return -1 #TODO: error handling
+            return -1 #% error handling. Didn't see EOS in transaction summary file
+
         return parsedMTSF
 
 
-    #param - MTSF Merged Transation Summary File, oldMAF old Master Accounts File, newMAF new Master Accounts File, newVAF new Valid Accounts File"""
     def run(self, oldMAF, MTSF, newMAF,newVAF):
+        ''' Runs the qBasicBackEnd.
+
+        Parameters: 
+        oldMAF -old Master Accounts Filename 
+        MTSF - Merged Transation Summary Filename
+        newMAF - new Master Accounts Filename
+        newVAF - new Valid Accounts Filename
+        '''
         self.dict_of_accounts = self.read_master_accounts_file(oldMAF)
         if self.dict_of_accounts == -1:
             print("Invalid Master Accounts File. Abort.")
@@ -161,7 +169,7 @@ class QBasicBackEnd():
         self.write_master_accounts(newMAF)
 
     def write_valid_accounts(self, filename):
-
+        '''Writes a valid accounts file to param filename using accounts in self.dict_of_accounts'''
         accts = sorted(list(self.dict_of_accounts.keys()))
         accts = ["{0}\n".format(x) for x in accts] #add a newline after each
 
@@ -170,7 +178,7 @@ class QBasicBackEnd():
 
 
     def write_master_accounts(self, filename):
-        """write to the new master accounts file"""
+        """write to the new master accounts file to filename using self.dict_of_accounts"""
 
         #sorts all account numbers
         accts = sorted([acct for acct in self.dict_of_accounts])
@@ -203,6 +211,8 @@ class QBasicBackEnd():
         pass
 
     def create_acct(self, account, name):
+        '''If account doesn't exist, creates an account and adds it to self.dict_of_accounts. 
+        Assumes entered name is a valid name'''
         #account can't exist
         if account in self.dict_of_accounts:
             print("Cannot create new account {0} as it already exists".format(account))
@@ -211,18 +221,20 @@ class QBasicBackEnd():
         self.dict_of_accounts[account] = (0, name)
 
     def delete_acct(self, account, name):
-        #can't delete account with non-zero balance
-        #names have to match
+        '''Deletes an account with matching account number and name if it has a non-zero balance'''
+        
         #account has to exist
         if account not in self.dict_of_accounts:
             print("Cannot delete account {0}, it does not exist".format(account))
             return
-
+        
+        #can't delete account with non-zero balance
         acct_bal = self.dict_of_accounts[account][0]
         if acct_bal != 0:
             print("Cannot delete account {0} with non-zero balance {1}".format(account, acct_bal))
             return
 
+        #names have to match
         acct_name = self.dict_of_accounts[account][1]
         if acct_name != name:
             print("Cannot delete account {a} {n} as supplied name {n2} does not match".format(a=account, n=acct_name, n2=name))
@@ -236,6 +248,10 @@ class QBasicBackEnd():
 
         return nameStr.replace(' ','').isalnum() #all non spaces are alpha-numeric
 
+    def is_name_field_valid(self, nameStr):
+        '''Checks if account name field is valid. This occurs when the account name is valid or it is ***'''
+        return self.is_name_valid(nameStr) or nameStr == "***"
+
     def is_account_valid(self, accountStr):
         '''
         Checks if an account number (represented as a string) is valid (7 numbers long, no leading 0)
@@ -244,7 +260,7 @@ class QBasicBackEnd():
         return len(accountStr) == 7 and accountStr.isdigit() and accountStr[0] != "0"
 
     def is_balance_valid(self, balance):
-        '''Takes in balance as an int'''
+        '''Takes in balance as an int and checks if it is within 0 and 99999999 inclusive'''
         if balance < 0 or balance >= 100000000: #cannot be greater than 8 digits or less than 0
             return False
         return True
@@ -252,8 +268,8 @@ class QBasicBackEnd():
     def is_valid_trans_code(self, trans_code):
         return trans_code in ["DEP", "WDR", "XFR", "NEW", "DEL"]
 
-    def is_str_amount_valid(self, amtStr):
-        '''Takes in an amount in string form and returns amount in intergerif it is valid to be found in the master account or transaction summary file.
+    def is_amt_field_valid(self, amtStr):
+        '''Takes in an amount field in string form and returns amount in interger if it valid to be found in the master account or transaction summary file.
         Returns -1 if not valid'''
         if len(amtStr) < 3:
             return False
