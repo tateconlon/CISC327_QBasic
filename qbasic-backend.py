@@ -228,7 +228,7 @@ class QBasicBackEnd():
 
 
     def valid_balance_chg(self, account, val):
-        """Returns tue if account's balance can be increased by val."""
+        """Returns tue if account's balance can be changed by val."""
         if account not in self.dict_of_accounts:
             return False
         new_balance = self.dict_of_accounts[account][0] + val
@@ -264,7 +264,7 @@ class QBasicBackEnd():
         return trans_code in ["DEP", "WDR", "XFR", "NEW", "DEL"]
 
     def is_amt_field_valid(self, amtStr):
-        '''Takes in an amount field in string form and returns amount in interger 
+        '''Takes in an amount field in string form and returns amount in integer 
         if it valid to be found in the master account or transaction summary file.
         Returns -1 if not valid'''
         if len(amtStr) < 3:
