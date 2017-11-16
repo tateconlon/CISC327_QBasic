@@ -135,7 +135,8 @@ class QBasicBackEnd():
             print("Invalid Master Accounts File. Abort.")
             return
 
-        retVal = self.dict_of_accounts
+        self.dict_of_accounts = retVal
+
         
         transaction_list = self.read_merged_transaction_summary_file()
         if transaction_list == -1:
@@ -143,6 +144,7 @@ class QBasicBackEnd():
             return
 
         for trans in transaction_list:
+            print(trans)
             code = trans["trans_code"]
             if code == "DEP":
                 self.deposit(trans["account1"], trans["amt"])
