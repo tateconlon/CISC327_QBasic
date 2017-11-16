@@ -9,14 +9,28 @@ class QBasicBackEnd():
     session aborts, writing nothing. 
     '''
 
+    def __init__(self, oldMAF, MTSF, newMAF,newVAF):
+        ''' Parameters: 
+        oldMAF -old Master Accounts Filename 
+        MTSF - Merged Transation Summary Filename
+        newMAF - new Master Accounts Filename
+        newVAF - new Valid Accounts Filename'''
+        self.oldMAF = oldMAF
+        self.MTSF = MTSF
+        self.newMAF = newMAF
+        self.newVAF = newVAF
+
+
+
     dict_of_accounts = {} #key = str(accountName): val = [int(balance), str(name)]
     MAX_MSTER_ACCOUNTS_LINE_LENGTH = 47
 
-    def read_master_accounts_file(self, filename):
+    def read_master_accounts_file(self):
         ''' Read Master Accounts File and parse it into accounts with a balance and name.
         Returns a dictionary in the form of {str(account): [int(balance, str(name)])}
         '''
-        lines = self.read_file(filename)
+        print(self.oldMAF)
+        lines = self.read_file(self.oldMAF)
 
         ret_dict_of_accounts = {} #empty dict_of_accounts
 
@@ -82,8 +96,8 @@ class QBasicBackEnd():
         return (ret_error_fields, intAmt)
 
 
-    def read_merged_transaction_summary_file(self, filename):
-        MTSFLines = self.read_file(filename)
+    def read_merged_transaction_summary_file(self):
+        MTSFLines = self.read_file(self.MTSF)
         parsedMTSF = []
         seenEOS = False
         for line in MTSFLines:
@@ -113,23 +127,17 @@ class QBasicBackEnd():
         return parsedMTSF
 
 
-    def run(self, oldMAF, MTSF, newMAF,newVAF):
+    def run(self):
         ''' Runs the qBasicBackEnd by parsing oldMaster Acconunts File, merged transaction summary file
-       
-        Parameters: 
-        oldMAF -old Master Accounts Filename 
-        MTSF - Merged Transation Summary Filename
-        newMAF - new Master Accounts Filename
-        newVAF - new Valid Accounts Filename
         '''
-        retVal = self.read_master_accounts_file(oldMAF)
+        retVal = self.read_master_accounts_file()
         if retVal == -1:
             print("Invalid Master Accounts File. Abort.")
             return
 
         retVal = self.dict_of_accounts
         
-        transaction_list = self.read_merged_transaction_summary_file(MTSF)
+        transaction_list = self.read_merged_transaction_summary_file()
         if transaction_list == -1:
             print("Invalid Transaction Summary File. Abort.")
             return
@@ -147,18 +155,18 @@ class QBasicBackEnd():
             elif code == "DEL":
                 self.delete_acct(trans["account1"], trans["name"])
 
-        self.write_valid_accounts(newVAF)
-        self.write_master_accounts(newMAF)
+        self.write_valid_accounts()
+        self.write_master_accounts()
 
-    def write_valid_accounts(self, filename):
+    def write_valid_accounts(self):
         '''Writes a valid accounts file to param filename using accounts in self.dict_of_accounts'''
         accts = sorted(list(self.dict_of_accounts.keys()))
         accts = ["{0}\n".format(x) for x in accts] #add a newline after each
 
         accts.append("0000000") #ending marker for valid accounts file
-        self.write_file(filename, accts)
+        self.write_file(self.newVAF, accts)
 
-    def write_master_accounts(self, filename):
+    def write_master_accounts(self):
         """Write account# balance and names from self.dict_of_accounts to the new master accounts file"""
 
         #sorts all account numbers in ascending order
@@ -176,7 +184,7 @@ class QBasicBackEnd():
             new_master_acct_txt += line + "\n"
 
         new_master_acct_txt.rstrip("\n") #remove extra newline
-        self.write_file(filename, new_master_acct_txt)
+        self.write_file(self.newMAF, new_master_acct_txt)
 
     def transfer(self, accountTo, accountFrom, amt):
         '''Transfer amt cents from accountFrom to accountTo'''
@@ -283,7 +291,7 @@ class QBasicBackEnd():
             return amt
         return -1
 
-    def str_split(s, numFields):
+    def str_split(self, s, numFields):
         '''
         s is a string containing fields seperated by a space. This function splits s left to right into a number of fields. After numFields - 1 fields,
         the rest of the string is stored in the final field (even if it contains spaces) 
@@ -320,7 +328,8 @@ class QBasicBackEnd():
 
         return ret_list
 
-    def read_file(filename, keep_newlines=False):
+    def read_file(self, filename, keep_newlines=False):
+        print(filename)
         '''Reads a file into a list of lines and returns them '''
         with open(filename, "r") as f:
             if keep_newlines:
@@ -328,7 +337,7 @@ class QBasicBackEnd():
             else:
                 return [x.rstrip("\n") for x in f.readlines()]
 
-    def write_file(filename, lines): 
+    def write_file(self, filename, lines): 
         '''Writes a list of lines to a file.'''   
         with open(filename, "w") as f:
             f.writelines(lines)
@@ -356,8 +365,8 @@ def qbasic_backend_parse_args():
 
 def main():
     cmd_args = qbasic_backend_parse_args()
-    back_end = QBasicBackEnd()
-    back_end.run(cmd_args["old_MA_file"], cmd_args["merged_TS_file"], cmd_args["new_MA_file"], cmd_args["new_VA_file"])
+    back_end = QBasicBackEnd(cmd_args["old_MA_file"], cmd_args["merged_TS_file"], cmd_args["new_MA_file"], cmd_args["new_VA_file"])
+    back_end.run()
     
 
 if __name__ == "__main__":
