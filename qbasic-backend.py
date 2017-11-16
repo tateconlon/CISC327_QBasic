@@ -135,7 +135,7 @@ class QBasicBackEnd():
             print("Invalid Master Accounts File. Abort.")
             return
 
-        retVal = self.dict_of_accounts
+        self.dict_of_accounts = retVal
         
         transaction_list = self.read_merged_transaction_summary_file()
         if transaction_list == -1:
@@ -364,10 +364,15 @@ def qbasic_backend_parse_args():
     return args
 
 def main():
-    cmd_args = qbasic_backend_parse_args()
-    back_end = QBasicBackEnd(cmd_args["old_MA_file"], cmd_args["merged_TS_file"], cmd_args["new_MA_file"], cmd_args["new_VA_file"])
-    back_end.run()
-    
+	"""This programs intention is to run the back-end functionality of the QBasic system. This
+	program will be run once per day to run the transactions that occured during that day and 
+	taking in the master account file and the transaction summary of the day and writing a new 
+	master account file after the transactions have been made as well as a valid account file"""
+
+	cmd_args = qbasic_backend_parse_args()
+	back_end = QBasicBackEnd(cmd_args["old_MA_file"], cmd_args["merged_TS_file"], cmd_args["new_MA_file"], cmd_args["new_VA_file"])
+	back_end.run()
+
 
 if __name__ == "__main__":
     main()
