@@ -19,42 +19,38 @@ back_end_cmd = "python qbasic-backend.py {ma} {ts} {out_ma} {out_va}"
 #takes a list of file names (1 for each session inputs)
     #if there's a list of file names, no interactive session
 #else ALL INTERACTIVE SESSIONS
+
+
 class QBasicDaily:
 
     timeStamp = ""
     ts_fn_format = "{dir}/{0}_ts.txt"
     merged_ts_fn_format = "{dir}/merged_ts.txt"
-    output_ma_fn_format = "{dir}/new_ma.txt"
-    output_va_fn_format = "{dir}/new_va.txt"
 
     def __init__(self):
         self.timeStamp = '{:%Y-%m-%d_%H-%M-%S-%f}'.format(datetime.datetime.now())
         self.dir = "d_session_{0}".format(self.timeStamp)
 
-    def run(self, validAccountsFilename, inputList, oldMasterAccountsFilename):
-
-        os.makedirs("{0}".format(self.dir), exist_ok=True)
+    def run(self, old_va_fn, old_ma_fn, new_va_fn, new_ma_fn, inputList):
+        os.makedirs(self.dir, exist_ok=True)
         
-        for i, f_name in enumerate(inputList):
-            self.runFrontEnd(validAccountsFilename, i, f_name)
+        for i, input_fn in enumerate(inputList):
+            self.runFrontEnd(old_va_fn, i, input_fn)
             pass
 
         #runs interactive sessions until minimum 3 sessions are run
         while i < 2:
-            self.runFrontEnd(validAccountsFilename, i)
+            self.runFrontEnd(old_va_fn, i)
             i += 1
 
-        self.mergeTransactionFiles()
+        merged_ts_fn = self.mergeTransactionFiles()
 
-        self.runBackEnd(oldMasterAccountsFilename, "merged_ts.txt", "new_ma.txt", "new_va.txt") #TODO: Cleanup
+        self.runBackEnd(old_ma_fn, merged_ts_fn, new_ma_fn, new_va_fn) #TODO: Cleanup
 
 
     def runBackEnd(self, old_ma_fn, merged_TS_fn, new_ma_fn, new_va_fn):
-        old_ma = old_ma_fn #TODO: fix directories
-        ts = self.getFullPath(merged_TS_fn)
-        new_ma = self.getFullPath(new_ma_fn)
-        new_va = self.getFullPath(new_va_fn)
-        os.system(back_end_cmd.format(ma=old_ma, ts=ts, out_ma=new_ma, out_va=new_va))
+        print("***** QBasic Back End Session Begins *****")
+        os.system(back_end_cmd.format(ma=old_ma_fn, ts=merged_TS_fn, out_ma=new_ma_fn, out_va=new_va_fn))
 
     def mergeTransactionFiles(self):
         merged_trans_list = []
@@ -69,7 +65,11 @@ class QBasicDaily:
         merged_trans_list.append("EOS")
         merged_ts_contents = "\n".join(merged_trans_list)
 
-        self.write_file(self.merged_ts_fn_format.format(dir=self.dir), merged_ts_contents)
+        merged_ts_fn = self.merged_ts_fn_format.format(dir=self.dir)
+
+        self.write_file(merged_ts_fn, merged_ts_contents)
+
+        return merged_ts_fn
 
     def read_transaction_summary(self, filename):
         lines = self.read_file(filename)
@@ -79,14 +79,15 @@ class QBasicDaily:
             print("***** TRANSACTION SUMMARY FILE DID NOT END WITH EOS **********")
         return lines
 
-    def runFrontEnd(self, validAccountsFilename, session_num, input_fn=None):
+    def runFrontEnd(self, va_fn, session_num, input_fn=None):
+        print("***** QBasic Front End Session Begins *****")
         out_ts_fn = self.ts_fn_format.format(session_num, dir=self.dir)
 
         if input_fn == None:
             print("\n**** QBASIC INTERACTIVE SESSION BEGUN ****")
-            os.system(front_end_cmd_interactive.format(va=validAccountsFilename, out_ts=out_ts_fn))
+            os.system(front_end_cmd_interactive.format(va=va_fp, out_ts=out_ts_fn))
         else:
-            os.system(front_end_cmd.format(va=validAccountsFilename, out_ts=out_ts_fn, inp=input_fn))
+            os.system(front_end_cmd.format(va=va_fn, out_ts=out_ts_fn, inp=input_fn))
 
     def getFullPath(self, filename):
         return "{dir}/{fn}".format(dir=self.dir, fn=filename)
@@ -106,14 +107,20 @@ class QBasicDaily:
 
 
 
-def qbasic_backend_parse_args():
+def parse_cmd_args():
     '''Validates and parses the command line arguments and returns a dictionary containing them'''
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("va_fn",
-                            help="valid accounts filename",
+    arg_parser.add_argument("old_va_fn",
+                            help="valid accounts filename to read from",
                             type=str)
-    arg_parser.add_argument("ma_fn",
-                            help="master accounts filename",
+    arg_parser.add_argument("old_ma_fn",
+                            help="old master accounts filename to read from",
+                            type=str)
+    arg_parser.add_argument("new_va_fn",
+                            help="new valid accounts filename to generate",
+                            type=str)
+    arg_parser.add_argument("new_ma_fn",
+                            help="new master accounts filename to generate",
                             type=str)
     arg_parser.add_argument('-inputs','--inputList', 
                             nargs='+', 
@@ -125,10 +132,9 @@ def qbasic_backend_parse_args():
 
 
 def main():
-    dic = qbasic_backend_parse_args()
-    print(dic)
+    args = parse_cmd_args()
     daily = QBasicDaily()
-    daily.run(dic["va_fn"], dic["inputList"], dic["ma_fn"])
+    daily.run(args["old_va_fn"], args["old_ma_fn"], args["new_va_fn"], args["new_ma_fn"], args["inputList"])
     pass
 
 if __name__ == "__main__":

@@ -1,6 +1,0 @@
-login
-agent
-createacct
-3334567
-TestAccount3
-logout

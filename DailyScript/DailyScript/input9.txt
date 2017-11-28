@@ -1,7 +1,0 @@
-login
-agent
-transfer
-1234567
-2234567
-25000
-logout

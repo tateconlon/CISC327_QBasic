@@ -45,6 +45,7 @@ class QBasic():
 		#log in successful
 		self.startLoggedInState(permissionType)
 
+
 		#return from logged in state means logout has occurred, and the session is over
 
 
@@ -324,7 +325,7 @@ class QBasic():
 			print("logout unsuccessful due to: {0}".format(e))
 			return
 
-		print("Transaction summary written and system logged out successfully", end="")
+		print("Transaction summary written and system logged out successfully")
 		self.loggedIn = False
 
 	def loadValidAccounts(self):

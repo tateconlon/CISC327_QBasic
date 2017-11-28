@@ -1,7 +1,0 @@
-attempt_before_login,logout,createacct,1754393,test,deleteacct,1234567,test2,Deposit,1234567,123,withdraw,1234567,123,Transfer,1234567,2345678,123
-login_ATM,login,machine,logout,,,,,,,,,,,,,,
-login_teller,login,agent,logout,,,,,,,,,,,,,,
-login_invalid_user,login,!@JFDsd,logout,,,,,,,,,,,,,,
-login_no_user,login,logout,,,,,,,,,,,,,,,
-attempt_login_twice,login,login,machine,logout,,,,,,,,,,,,,
-login_while_loggedin,login,machine,login,logout,,,,,,,,,,,,,
