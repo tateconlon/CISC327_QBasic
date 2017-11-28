@@ -29,7 +29,6 @@ class QBasicBackEnd():
         ''' Read Master Accounts File and parse it into accounts with a balance and name.
         Returns a dictionary in the form of {str(account): [int(balance, str(name)])}
         '''
-        print(self.oldMAF)
         lines = self.read_file(self.oldMAF)
 
         ret_dict_of_accounts = {} #empty dict_of_accounts
@@ -136,7 +135,6 @@ class QBasicBackEnd():
             return
 
         self.dict_of_accounts = retVal
-
         
         transaction_list = self.read_merged_transaction_summary_file()
         if transaction_list == -1:
@@ -144,7 +142,6 @@ class QBasicBackEnd():
             return
 
         for trans in transaction_list:
-            print(trans)
             code = trans["trans_code"]
             if code == "DEP":
                 self.deposit(trans["account1"], trans["amt"])
@@ -185,7 +182,7 @@ class QBasicBackEnd():
 
             new_master_acct_txt += line + "\n"
 
-        new_master_acct_txt.rstrip("\n") #remove extra newline
+        new_master_acct_txt = new_master_acct_txt.rstrip("\n") #remove extra newline
         self.write_file(self.newMAF, new_master_acct_txt)
 
     def transfer(self, accountTo, accountFrom, amt):
@@ -244,7 +241,7 @@ class QBasicBackEnd():
 
 
     def valid_balance_chg(self, account, val):
-        """Returns tue if account's balance can be increased by val."""
+        """Returns tue if account's balance can be changed by val."""
         if account not in self.dict_of_accounts:
             return False
         new_balance = self.dict_of_accounts[account][0] + val
@@ -280,7 +277,7 @@ class QBasicBackEnd():
         return trans_code in ["DEP", "WDR", "XFR", "NEW", "DEL"]
 
     def is_amt_field_valid(self, amtStr):
-        '''Takes in an amount field in string form and returns amount in interger 
+        '''Takes in an amount field in string form and returns amount in integer 
         if it valid to be found in the master account or transaction summary file.
         Returns -1 if not valid'''
         if len(amtStr) < 3:
@@ -331,7 +328,6 @@ class QBasicBackEnd():
         return ret_list
 
     def read_file(self, filename, keep_newlines=False):
-        print(filename)
         '''Reads a file into a list of lines and returns them '''
         with open(filename, "r") as f:
             if keep_newlines:
@@ -366,10 +362,15 @@ def qbasic_backend_parse_args():
     return args
 
 def main():
-    cmd_args = qbasic_backend_parse_args()
-    back_end = QBasicBackEnd(cmd_args["old_MA_file"], cmd_args["merged_TS_file"], cmd_args["new_MA_file"], cmd_args["new_VA_file"])
-    back_end.run()
-    
+	"""This programs intention is to run the back-end functionality of the QBasic system. This
+	program will be run once per day to run the transactions that occured during that day and 
+	taking in the master account file and the transaction summary of the day and writing a new 
+	master account file after the transactions have been made as well as a valid account file"""
+
+	cmd_args = qbasic_backend_parse_args()
+	back_end = QBasicBackEnd(cmd_args["old_MA_file"], cmd_args["merged_TS_file"], cmd_args["new_MA_file"], cmd_args["new_VA_file"])
+	back_end.run()
+
 
 if __name__ == "__main__":
     main()

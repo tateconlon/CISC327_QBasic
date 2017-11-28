@@ -1,0 +1,6 @@
+login
+machine
+withdraw
+2234567
+300
+logout
