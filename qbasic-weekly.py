@@ -4,23 +4,23 @@ import os
 
 def day1():
     #
-    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT input1.txt input2.txt input3.txt")
+    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT -input input1.txt input2.txt input3.txt")
 
 def day2():
     #
-    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT input4.txt input5.txt input6.txt")
+    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT -input input4.txt input5.txt input6.txt")
     
 def day3():
     #
-    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT input7.txt input8.txt input9.txt")
+    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT -input input7.txt input8.txt input9.txt")
 
 def day4():
     #
-    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT input10.txt input11.txt input12.txt")
+    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT -input input10.txt input11.txt input12.txt")
 
 def day5():
     #
-    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT input13.txt input14.txt input15.txt")
+    os.system("python qbasic-daily.py VALIDACCOUNTS.TXT MASTERACCOUNTS.TXT -input input13.txt input14.txt input15.txt")
 
 def main():
     input("Press Enter to advance to Day 1.")
