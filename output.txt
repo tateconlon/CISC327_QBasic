@@ -1,0 +1,84 @@
+login as agent successful
+createacct 1234567 TestAccount successful
+Transaction summary written and system logged out successfully
+login as agent successful
+createacct 2234567 TestAccount2 successful
+Transaction summary written and system logged out successfully
+login as agent successful
+createacct 3334567 TestAccount3 successful
+Transaction summary written and system logged out successfully
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Back End Session Begins *****
+login as agent successful
+Cannot create account number 2234567 as it already exists
+transaction code TestAccount2 invalid
+Transaction summary written and system logged out successfully
+login as agent successful
+Cannot create account number 3334567 as it already exists
+transaction code TestAccount3 invalid
+Transaction summary written and system logged out successfully
+login as agent successful
+deposit 1234567 500000 successful
+Transaction summary written and system logged out successfully
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Back End Session Begins *****
+login as agent successful
+Cannot create account number 3334567 as it already exists
+transaction code TestAccount3 invalid
+Transaction summary written and system logged out successfully
+login as agent successful
+deposit 1234567 500000 successful
+Transaction summary written and system logged out successfully
+login as agent successful
+transfer of 50000 cents from 2234567 to 1234567 successful
+Transaction summary written and system logged out successfully
+Transfer Invalid - not enough money in account or account overflow
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Back End Session Begins *****
+login as agent successful
+deposit 1234567 500000 successful
+Transaction summary written and system logged out successfully
+login as agent successful
+transfer of 50000 cents from 2234567 to 1234567 successful
+Transaction summary written and system logged out successfully
+login as machine successful
+withdraw 2234567 100 successful
+Transaction summary written and system logged out successfully
+Transfer Invalid - not enough money in account or account overflow
+Withdraw Invalid - Account 2234567 does not have 100 cents to withdraw
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Back End Session Begins *****
+login as agent successful
+transfer of 50000 cents from 2234567 to 1234567 successful
+Transaction summary written and system logged out successfully
+login as machine successful
+withdraw 2234567 100 successful
+Transaction summary written and system logged out successfully
+login as machine successful
+withdraw 2234567 300 successful
+Transaction summary written and system logged out successfully
+Transfer Invalid - not enough money in account or account overflow
+Withdraw Invalid - Account 2234567 does not have 100 cents to withdraw
+Withdraw Invalid - Account 2234567 does not have 300 cents to withdraw
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Front End Session Begins *****
+***** QBasic Back End Session Begins *****
+***** RUN DAILY SESSION 1 *****
+daily_inputs/input1.txt daily_inputs/input2.txt daily_inputs/input3.txt
+***** RUN DAILY SESSION 2 *****
+daily_inputs/input2.txt daily_inputs/input3.txt daily_inputs/input4.txt
+***** RUN DAILY SESSION 3 *****
+daily_inputs/input3.txt daily_inputs/input4.txt daily_inputs/input5.txt
+***** RUN DAILY SESSION 4 *****
+daily_inputs/input4.txt daily_inputs/input5.txt daily_inputs/input6.txt
+***** RUN DAILY SESSION 5 *****
+daily_inputs/input5.txt daily_inputs/input6.txt daily_inputs/input7.txt

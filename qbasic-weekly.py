@@ -1,18 +1,27 @@
-#script for running a weeks worth of daily transactions
-#python qbasic-daily.py VALIDACCOUNTS.TXT input1.txt input2.txt input3.txt
 import os
 import argparse
 
-daily_cmd = "python qbasic-daily.py {old_va} {old_ma} {new_va} {new_ma} -input {inputs}"
+#run this file from the command line with 3 arguments
+# week_number validAccountsFilename masterAccountsFilename
+
+
+daily_cmd = "python qbasic-daily.py {old_va} {old_ma} {new_va} {new_ma} -input {inputs}" #command to run daily session
 
 va_dir = "ValidAccounts"
 ma_dir = "MasterAccounts"
 
-va_fn_format = "{dir}/{week}_{day}_va.txt"
-ma_fn_format = "{dir}/{week}_{day}_ma.txt"
+va_fn_format = "{dir}/{week}_{day}_va.txt" #valid accounts naming convention
+ma_fn_format = "{dir}/{week}_{day}_ma.txt" #master accounts naming convention
 
 
 def run(week, old_va_fn, old_ma_fn):
+    '''
+    Runs a week long QBasic session by running 5 daily scripts, 
+    each passing the output of one daily script as the input to another.
+    Takes a week number, a valid accounts file and a master accounts (to pass to the first daily session)
+    All daily session outputted valid accounts go into the ValidAccoutns directory.
+    All daily session outputted master accounts go into the MasterAccounts directory.
+    '''
     
     os.makedirs(va_dir, exist_ok=True)
     os.makedirs(ma_dir, exist_ok=True)
@@ -20,20 +29,28 @@ def run(week, old_va_fn, old_ma_fn):
     prev_va = old_va_fn
     prev_ma = old_ma_fn
 
-    for day in range(1,6):
+    #5 days
+    for day in range(0,5):
 
+        #generate daily out valid account and master account filenames
         new_va_fn = va_fn_format.format(dir=va_dir, week=week, day=day)
         new_ma_fn = ma_fn_format.format(dir=ma_dir, week=week, day=day)
 
-        inputList = generate_input_files_list(week*5 + day, 3)
+        inputList = generate_input_files_list((day*3)+1, 3)
 
-        print("***** RUN DAILY SESSION {0} *****".format(day))
+        #run daily session
         os.system(daily_cmd.format(old_va=prev_va, old_ma=prev_ma, new_va=new_va_fn, new_ma=new_ma_fn, inputs=inputList))
 
+        #set past outputs as new inputs
         prev_va = new_va_fn
         prev_ma = new_ma_fn
 
 def generate_input_files_list(startNum, numFiles):
+    '''Retuns a space delimited string of input files to input to the daily session
+    @params:
+    startNum: input file # to start at
+    numFiles: number of input files to include
+    '''
     file_list = []
     for i in range(startNum, startNum + numFiles):
         file_list.append("daily_inputs/input{0}.txt".format(i))

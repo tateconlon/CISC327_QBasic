@@ -1,3 +1,2 @@
-1234567 1500000 TestAccount
-2234567 000 TestAccount2
-3334567 000 TestAccount3
+1234567 477100 TestAccount
+2234567 27500 TestAccount2
