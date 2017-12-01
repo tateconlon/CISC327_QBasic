@@ -1,0 +1,6 @@
+login
+agent
+deleteacct
+3334567
+TestAccount3
+logout

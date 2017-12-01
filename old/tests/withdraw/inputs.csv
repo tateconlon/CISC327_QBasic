@@ -1,6 +1,0 @@
-Withdraw valid amount in machine mode,login,machine,withdraw,1234567,100,logout
-Withdraw valid amount in agent mode,login,agent,withdraw,1234567,499999,logout
-Attempt to withdraw over 1000 from one account in machine mode,login,machine,withdraw,1234567,100001,logout
-"Attempt to withdraw over $999,999.99 in a single transaction in agent session",login,agent,withdraw,1234567,100000000,logout
-Attempt to withdraw from account that does not exist in agent mode,login,agent,withdraw,2234567,logout
-Attempt to withdraw from account that does not exist in machine mode,login,machine,withdraw,2234567,logout

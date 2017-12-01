@@ -1,3 +1,0 @@
-login as machine successful
-deleteacct not available with permission type machine
-Transaction summary written and system logged out successfully

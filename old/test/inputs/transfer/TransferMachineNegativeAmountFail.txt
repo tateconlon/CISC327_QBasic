@@ -1,7 +1,0 @@
-login
-machine
-transfer
-1234567
-2234567
--5
-logout

@@ -1,5 +1,0 @@
-login
-agent
-deleteacct
-2234567
-logout

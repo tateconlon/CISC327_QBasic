@@ -1,3 +1,0 @@
-login as machine successful
-Cannot transfer more than $1000.00 in a single transaction in machine mode
-Transaction summary written and system logged out successfully

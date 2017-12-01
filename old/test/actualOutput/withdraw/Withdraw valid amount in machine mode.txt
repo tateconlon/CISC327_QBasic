@@ -1,3 +1,0 @@
-login as machine successful
-withdraw 1234567 100 successful
-Transaction summary written and system logged out successfully

@@ -1,2 +1,0 @@
-login as agent successful
-Transaction summary written and system logged out successfully

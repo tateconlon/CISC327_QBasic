@@ -1,6 +1,0 @@
-login
-machine
-deposit
-1234567
-5000000
-logout

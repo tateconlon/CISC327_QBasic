@@ -1,4 +1,0 @@
-machine_logout,login,machine,logout,,,,,,
-agent_logout,login,agent,logout,,,,,,
-transaction_after_logout,login,machine,logout,withdraw,,,,,
-login_after_logout,login,machine,logout,login,agent,logout,login,machine,logout

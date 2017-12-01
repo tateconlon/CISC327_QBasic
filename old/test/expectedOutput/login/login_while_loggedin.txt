@@ -1,3 +1,0 @@
-login as machine successful
-transaction code login invalid
-Transaction summary written and system logged out successfully

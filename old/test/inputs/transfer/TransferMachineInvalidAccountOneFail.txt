@@ -1,5 +1,0 @@
-login
-machine
-transfer
-1000007
-logout

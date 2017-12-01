@@ -1,1 +1,0 @@
-login permission logout not agent or machine

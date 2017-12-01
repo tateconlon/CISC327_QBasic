@@ -1,3 +1,0 @@
-1234567 476000 TestAccount
-2234567 25000 TestAccount2
-3334567 000 TestAccount3

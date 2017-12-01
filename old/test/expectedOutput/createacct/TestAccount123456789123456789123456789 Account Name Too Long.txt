@@ -1,3 +1,0 @@
-login as agent successful
-TestAccount123456789123456789123456789 is not a valid account name
-Transaction summary written and system logged out successfully

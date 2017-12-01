@@ -1,6 +1,0 @@
-login as machine successful,withdraw 1234567 100 successful,Transaction summary written and system logged out successfully
-login as agent successful,withdraw 1234567 499999 successful,Transaction summary written and system logged out successfully
-login as machine successful,Cannot withdraw more than $1000.00 in a single transaction in machine mode,Transaction summary written and system logged out successfully
-login as agent successful,"Cannot withdraw more than $999,999.99 in a single transaction in agent mode",Transaction summary written and system logged out successfully
-login as agent successful,Account 2234567 does not exist,Transaction summary written and system logged out successfully
-login as machine successful,Account 2234567 does not exist,Transaction summary written and system logged out successfully

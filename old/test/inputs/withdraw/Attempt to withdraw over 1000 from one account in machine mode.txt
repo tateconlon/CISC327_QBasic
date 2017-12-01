@@ -1,6 +1,0 @@
-login
-machine
-withdraw
-1234567
-100001
-logout

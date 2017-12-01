@@ -1,3 +1,0 @@
-login as agent successful
-withdraw 1234567 499999 successful
-Transaction summary written and system logged out successfully

@@ -1,3 +1,0 @@
-login as machine successful
-Account 1000007 does not exist
-Transaction summary written and system logged out successfully

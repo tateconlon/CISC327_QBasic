@@ -1,3 +1,0 @@
-login as machine successful
-Cannot transfer less than 1 cent
-Transaction summary written and system logged out successfully

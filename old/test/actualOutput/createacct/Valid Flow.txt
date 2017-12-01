@@ -1,3 +1,0 @@
-login as agent successful
-createacct 2234567 TestAccount successful
-Transaction summary written and system logged out successfully
